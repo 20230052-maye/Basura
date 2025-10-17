@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BasuraTrack Sariaya - Analytics & Reports</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="analytics.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><i class="bi bi-recycle me-2"></i>BasuraTrack Sariaya</a>
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item me-3">
+          <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle"></i> Admin
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <nav class="nav flex-column">
+      <a class="nav-link" href="index.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
+      <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i>Routes & Schedules</a>
+      <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i>Trucks & Collectors</a>
+      <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i>Collection Records</a>
+      <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i>Resident Reports</a>
+      <a class="nav-link active" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports</a>
+      <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i>Announcements</a>
+      <a class="nav-link" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container-fluid px-4">
+      <!-- Charts Section -->
+      <div class="card p-4 mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+          <h4 class="fw-semibold text-dark mb-2 mb-md-0">
+            <i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports
+          </h4>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="chart-card">
+              <h6 class="fw-semibold mb-2 text-secondary">Waste Collected per Barangay (Bar Chart)</h6>
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="chart-card">
+              <h6 class="fw-semibold mb-2 text-secondary">Weekly Collection Trends (Line Chart)</h6>
+              <canvas id="lineChart"></canvas>
+            </div>
+          </div>
+
+          <div class="col-lg-6 ">
+            <div class="chart-card">
+              <h6 class="fw-semibold mb-2 text-secondary">Report Resolution Rate (%)</h6>
+              <canvas id="pieChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download Reports -->
+<div class="card p-4 download-section text-center">
+  <h5 class="fw-semibold mb-3">
+    <i class="bi bi-download me-2"></i>Download Reports
+  </h5>
+  <div class="download-buttons justify-content-center">
+    <button class="btn btn-success" onclick="downloadPDF()">
+      <i class="bi bi-file-earmark-pdf"></i> PDF
+    </button>
+    <button class="btn btn-primary" onclick="downloadCSV()">
+      <i class="bi bi-filetype-csv"></i> CSV
+    </button>
+    <button class="btn btn-secondary" onclick="showSummary()">
+      <i class="bi bi-calendar3"></i> Monthly Summary
+    </button>
+  </div>
+</div>
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Chart.js Logic -->
+  <script>
+    // Bar Chart: Waste Collected per Barangay
+    const barCtx = document.getElementById("barChart");
+    new Chart(barCtx, {
+      type: "bar",
+      data: {
+        labels: ["Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5"],
+        datasets: [{
+          label: "Waste Collected (kg)",
+          data: [1200, 950, 1340, 1100, 900],
+          backgroundColor: "#66bb6a"
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: "Kilograms" } },
+          x: { title: { display: true, text: "Barangay" } }
+        }
+      }
+    });
+
+    // Line Chart: Weekly Collection Trends
+    const lineCtx = document.getElementById("lineChart");
+    new Chart(lineCtx, {
+      type: "line",
+      data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+          label: "Collected Waste (kg)",
+          data: [200, 250, 230, 280, 260, 300, 320],
+          borderColor: "#2e7d32",
+          backgroundColor: "rgba(46, 125, 50, 0.1)",
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: "top" } },
+        scales: {
+          y: { beginAtZero: true },
+          x: { title: { display: true, text: "Day of Week" } }
+        }
+      }
+    });
+
+    // Pie Chart: Report Resolution Rate
+    const pieCtx = document.getElementById("pieChart");
+    new Chart(pieCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["Resolved", "Pending"],
+        datasets: [{
+          data: [80, 20],
+          backgroundColor: ["#43a047", "#c62828"]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: "bottom" } }
+      }
+    });
+
+    // --- Report Download Simulation ---
+    function downloadPDF() {
+      alert("PDF Report downloaded successfully!");
+    }
+
+    function downloadCSV() {
+      alert("CSV Report downloaded successfully!");
+    }
+
+    function showSummary() {
+      alert("Monthly Summary:\n\n- Total Waste Collected: 5,890 kg\n- Average Resolution Rate: 82%\n- Most Active Barangay: Barangay 3");
+    }
+  </script>
+</body>
+</html>

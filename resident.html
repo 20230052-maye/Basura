@@ -11,6 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <link rel="stylesheet" href="resident.css">
+</head>
+<body>
 
   <!-- Top Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -43,23 +45,62 @@
       <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i>Trucks & Collectors</a>
       <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i>Collection Records</a>
       <a class="nav-link active" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i>Resident Reports</a>
-      <a class="nav-link" href="#"><i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports</a>
-      <a class="nav-link" href="#"><i class="bi bi-megaphone-fill me-2"></i>Announcements</a>
+      <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports</a>
+      <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i>Announcements</a>
       <a class="nav-link" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a>
     </nav>
   </div>
 
   <!-- Main Content -->
-  <div class="main-content container-fluid">
-    <div class="row">
-      <!-- Table Section -->
-      <div class="col-lg-9 mb-4">
-        <div class="card p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="fw-semibold text-dark mb-0">
-              <i class="bi bi-person-lines-fill me-2"></i>Resident Reports
-            </h4>
+  <div class="main-content">
+    <div class="container-fluid px-4">
+      <div class="card p-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+          <h4 class="fw-semibold text-dark mb-2 mb-md-0">
+            <i class="bi bi-person-lines-fill me-2"></i>Resident Reports
+          </h4>
+
+          <!-- Filter Dropdown -->
+          <div class="dropdown filter-dropdown">
+            <button class="btn btn-success dropdown-toggle d-flex align-items-center"
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-funnel-fill me-2"></i>Filter Reports
+            </button>
+            <div class="dropdown-menu p-3 shadow filter-box">
+              <div class="mb-3">
+                <label for="filterBarangay" class="form-label fw-semibold">Barangay</label>
+                <select id="filterBarangay" class="form-select">
+                  <option value="">Select Barangay</option>
+                  <option value="Sampaloc">Sampaloc</option>
+                  <option value="Guisguis">Guisguis</option>
+                  <option value="Poblacion">Poblacion</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="filterDate" class="form-label fw-semibold">Date</label>
+                <input type="date" id="filterDate" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="filterStatus" class="form-label fw-semibold">Status</label>
+                <select id="filterStatus" class="form-select">
+                  <option value="">Select Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Resolved">Resolved</option>
+                </select>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button id="filterBtn" class="btn btn-success"><i class="bi bi-filter-circle me-1"></i>Apply</button>
+                <button id="resetBtn" class="btn btn-secondary"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-wrapper">
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead>
@@ -101,47 +142,7 @@
             </table>
           </div>
         </div>
-      </div>
 
-      <!-- Filter Dropdown Section -->
-      <div class="col-lg-3 d-flex justify-content-end align-items-start">
-        <div class="dropdown filter-dropdown w-100">
-          <button class="btn btn-success w-100 dropdown-toggle d-flex align-items-center justify-content-center"
-                  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-funnel-fill me-2"></i>Filter Reports
-          </button>
-          <div class="dropdown-menu p-3 shadow filter-box w-100">
-
-            <div class="mb-3">
-              <label for="filterBarangay" class="form-label fw-semibold">Barangay</label>
-              <select id="filterBarangay" class="form-select">
-                <option value="">Select Barangay</option>
-                <option value="Sampaloc">Sampaloc</option>
-                <option value="Guisguis">Guisguis</option>
-                <option value="Poblacion">Poblacion</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="filterDate" class="form-label fw-semibold">Date</label>
-              <input type="date" id="filterDate" class="form-control">
-            </div>
-
-            <div class="mb-3">
-              <label for="filterStatus" class="form-label fw-semibold">Status</label>
-              <select id="filterStatus" class="form-select">
-                <option value="">Select Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Resolved">Resolved</option>
-              </select>
-            </div>
-
-            <div class="d-grid gap-2">
-              <button id="filterBtn" class="btn btn-success"><i class="bi bi-filter-circle me-1"></i>Apply</button>
-              <button id="resetBtn" class="btn btn-secondary"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

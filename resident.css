@@ -1,6 +1,7 @@
 body {
   font-family: "Poppins", sans-serif;
   background-color: #f1f8f4;
+  overflow-x: hidden;
 }
 
 /* Navbar */
@@ -40,22 +41,30 @@ body {
 .main-content {
   margin-left: 260px;
   margin-top: 80px;
-  padding-right: 20px;
+  padding: 20px;
 }
-
 
 /* Card and Table */
 .card {
   border: none;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
 }
+
+/* Table container spacing */
+.table-wrapper {
+  margin-top: 20px;
+}
+
 .table th {
   background-color: #2e7d32;
   color: #fff;
+  text-align: center;
 }
 .table td {
   vertical-align: middle;
+  text-align: center;
 }
 
 /* Filter Dropdown */
@@ -63,11 +72,37 @@ body {
   border-radius: 15px;
   font-weight: 600;
   font-size: 15px;
+  padding: 8px 14px;
 }
 .filter-box {
   border-radius: 12px;
   background-color: #fff;
+  width: 250px;
 }
 .filter-box .form-label {
   color: #2e7d32;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    margin-top: 100px;
+  }
+
+  .filter-dropdown {
+    width: 100%;
+  }
+
+  .filter-box {
+    width: 100%;
+  }
+
+  .table-wrapper {
+    margin-top: 15px;
+  }
 }
