@@ -80,16 +80,96 @@
       </div>
     </div>
 
-    <!-- Collection Map -->
-    <div class="mt-4">
-      <h5><i class="bi bi-map-fill me-2 text-success"></i>Collection Map (Barangays of Sariaya)</h5>
-      <div class="map-placeholder">🗺️ Interactive Map Placeholder</div>
-      <ul class="mt-2 small text-muted">
-        <li>Markers for trucks in <span class="text-danger">real-time</span></li>
-        <li>Color zones for routes (Poblacion, Guisguis, etc.)</li>
-        <li>Hover to show truck name and current status</li>
-      </ul>
-    </div>
+<!-- Collection Map -->
+<div class="mt-4">
+  <h5><i class="bi bi-map-fill me-2 text-success"></i>Collection Map (Barangays of Sariaya)</h5>
+  <div id="sariaya-map" style="height: 450px; border: 1px solid #ccc; border-radius: 8px;"></div>
+  <ul class="mt-2 small text-muted">
+    <li>Markers for trucks in <span class="text-danger">real-time</span></li>
+    <li>Color zones for routes (Poblacion, Guisguis, etc.)</li>
+    <li>Hover to show truck name and current status</li>
+  </ul>
+</div>
+
+<!-- Leaflet CSS & JS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  // Initialize the map centered on Sariaya
+  var map = L.map('sariaya-map').setView([13.9897, 121.4761], 13);
+
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Example truck markers (replace with your real-time data later)
+  var trucks = [
+    {name: "Truck 01", status: "Collecting", coords: [13.990, 121.478]},
+    {name: "Truck 02", status: "Idle", coords: [13.987, 121.474]},
+    {name: "Truck 03", status: "Returning", coords: [13.985, 121.479]}
+  ];
+
+  trucks.forEach(function(truck) {
+    L.marker(truck.coords)
+      .addTo(map)
+      .bindPopup(`<b>${truck.name}</b><br>Status: ${truck.status}`);
+  });
+
+  // Example route zones with colors
+  var zones = [
+    {
+      name: "Poblacion",
+      color: "green",
+      coords: [
+        [13.992, 121.473],
+        [13.991, 121.479],
+        [13.986, 121.478],
+        [13.987, 121.473]
+      ]
+    },
+    {
+      name: "Guisguis",
+      color: "blue",
+      coords: [
+        [13.994, 121.480],
+        [13.993, 121.485],
+        [13.989, 121.484],
+        [13.990, 121.480]
+      ]
+    },
+    {
+      name: "San Juan",
+      color: "orange",
+      coords: [
+        [13.983, 121.477],
+        [13.982, 121.482],
+        [13.978, 121.481],
+        [13.979, 121.476]
+      ]
+    }
+  ];
+
+  zones.forEach(function(zone) {
+    L.polygon(zone.coords, {
+      color: zone.color,
+      fillOpacity: 0.2
+    }).addTo(map)
+      .bindPopup(zone.name + " Route Zone");
+  });
+
+  // Optional: zoom to fit all markers & zones
+  var allLayers = trucks.map(t => L.latLng(t.coords)).concat(
+    zones.flatMap(z => z.coords.map(c => L.latLng(c)))
+  );
+  var group = L.featureGroup(allLayers.map(L.marker));
+  map.fitBounds(group.getBounds().pad(0.1));
+</script>
 
     <!-- Recent Reports -->
     <div class="mt-4">
