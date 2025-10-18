@@ -8,6 +8,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
   <link rel="stylesheet" href="user.css">
+</head>
+<body style="padding-top: 70px;">
 
   <!-- Top Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -33,8 +35,6 @@
       </ul>
     </div>
   </nav>
-</head>
-<body style="padding-top: 70px;">
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -52,21 +52,17 @@
     </nav>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content">
     <div class="container-fluid px-4">
       <div class="card p-4 shadow-sm mt-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h4 class="fw-semibold text-dark"><i class="bi bi-people-fill me-2 text-success"></i>User Management</h4>
-        <div>
-          <button class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCollectorModal">
-            <i class="bi bi-person-plus-fill me-1"></i>Add Collector
-          </button>
         </div>
-      </div>
 
         <div class="note mb-3">
           <strong>Note:</strong> Resident accounts are <span class="text-success fw-semibold">view-only</span>. 
-          Admins cannot edit, add, or deactivate resident users.
+          Admins cannot add new users but can be edited or deactivated.
         </div>
 
         <div class="d-flex justify-content-end mb-3">
@@ -81,8 +77,9 @@
 
         <div class="table-responsive">
           <table class="table table-bordered align-middle">
-            <thead class="table-light">
+            <thead class="table-light ">
               <tr>
+                <th>User ID</th>
                 <th>Name</th>
                 <th>Role</th>
                 <th>Status</th>
@@ -91,6 +88,7 @@
             </thead>
             <tbody id="userTable">
               <tr>
+                <td>C001</td>
                 <td>Juan Dela Cruz</td>
                 <td>Collector</td>
                 <td><span class="badge bg-success">Active</span></td>
@@ -100,16 +98,21 @@
                 </td>
               </tr>
               <tr>
+                <td>R001</td>
                 <td>Maria Reyes</td>
                 <td>Resident</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td><button class="btn btn-sm btn-outline-secondary" disabled>View Only</button></td>
               </tr>
               <tr>
+                <td>A001</td>
                 <td>Admin Account</td>
                 <td>Admin</td>
                 <td><span class="badge bg-success">Active</span></td>
-                <td><button class="btn btn-sm btn-outline-success editBtn" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</button></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-success editBtn" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</button>
+                  <button class="btn btn-sm btn-outline-danger deactivateBtn">Deactivate</button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -118,35 +121,7 @@
     </div>
   </div>
 
-  <!-- Add Collector Modal -->
-  <div class="modal fade" id="addCollectorModal" tabindex="-1" aria-labelledby="addCollectorLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="addCollectorLabel">Add New Collector</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="addCollectorForm">
-            <div class="mb-3">
-              <label for="collectorName" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="collectorName" required>
-            </div>
-            <div class="mb-3">
-              <label for="collectorStatus" class="form-label">Status</label>
-              <select id="collectorStatus" class="form-select" required>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-success w-100">Add Collector</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit User Modal -->
+  <!-- Edit User Modal (Full Name Only) -->
   <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -160,14 +135,6 @@
             <div class="mb-3">
               <label for="editName" class="form-label">Full Name</label>
               <input type="text" class="form-control" id="editName" required>
-            </div>
-            <div class="mb-3">
-              <label for="editRole" class="form-label">Role</label>
-              <select id="editRole" class="form-select">
-                <option value="Collector">Collector</option>
-                <option value="Resident">Resident</option>
-                <option value="Admin">Admin</option>
-              </select>
             </div>
             <button type="submit" class="btn btn-success w-100">Save Changes</button>
           </form>
@@ -186,30 +153,9 @@
       const selectedRole = this.value;
       const rows = userTable.querySelectorAll('tr');
       rows.forEach(row => {
-        const role = row.children[1].textContent.trim();
+        const role = row.children[2].textContent.trim();
         row.style.display = (selectedRole === 'All' || role === selectedRole) ? '' : 'none';
       });
-    });
-
-    // Add Collector
-    document.getElementById('addCollectorForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('collectorName').value;
-      const status = document.getElementById('collectorStatus').value;
-
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td>${name}</td>
-        <td>Collector</td>
-        <td><span class="badge ${status === 'Active' ? 'bg-success' : 'bg-secondary'}">${status}</span></td>
-        <td>
-          <button class="btn btn-sm btn-outline-success editBtn" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</button>
-          <button class="btn btn-sm btn-outline-danger deactivateBtn">${status === 'Active' ? 'Deactivate' : 'Activate'}</button>
-        </td>`;
-      userTable.appendChild(newRow);
-      document.getElementById('addCollectorForm').reset();
-      bootstrap.Modal.getInstance(document.getElementById('addCollectorModal')).hide();
-      attachActionButtons();
     });
 
     // Edit Functionality
@@ -220,8 +166,7 @@
       document.querySelectorAll('.editBtn').forEach((btn) => {
         btn.onclick = () => {
           editingRow = btn.closest('tr');
-          document.getElementById('editName').value = editingRow.children[0].textContent.trim();
-          document.getElementById('editRole').value = editingRow.children[1].textContent.trim();
+          document.getElementById('editName').value = editingRow.children[1].textContent.trim();
         };
       });
 
@@ -234,13 +179,13 @@
             badge.classList.replace('bg-success', 'bg-secondary');
             btn.textContent = 'Activate';
             btn.classList.replace('btn-outline-danger', 'btn-outline-success');
-            alert(`${row.children[0].textContent} has been deactivated.`);
+            alert(`${row.children[1].textContent} has been deactivated.`);
           } else {
             badge.textContent = 'Active';
             badge.classList.replace('bg-secondary', 'bg-success');
             btn.textContent = 'Deactivate';
             btn.classList.replace('btn-outline-success', 'btn-outline-danger');
-            alert(`${row.children[0].textContent} has been activated.`);
+            alert(`${row.children[1].textContent} has been activated.`);
           }
         };
       });
@@ -249,8 +194,7 @@
     editForm.addEventListener('submit', function(e) {
       e.preventDefault();
       if (editingRow) {
-        editingRow.children[0].textContent = document.getElementById('editName').value;
-        editingRow.children[1].textContent = document.getElementById('editRole').value;
+        editingRow.children[1].textContent = document.getElementById('editName').value;
       }
       bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
     });
@@ -266,6 +210,5 @@
       }
     });
   </script>
-
 </body>
 </html>

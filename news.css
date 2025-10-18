@@ -49,23 +49,20 @@ body {
   margin-top: 80px;
   padding: 20px;
 }
-.card {
-  border-radius: 14px;
-  border: none;
-  background-color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+.card{
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Table */
-.table th {
-  background-color: #a7d7b0 !important;
-  color: #1b4332;
+table th,
+table td {
   text-align: center;
-}
-.table td {
   vertical-align: middle;
-  text-align: center;
 }
+
 .table-hover tbody tr:hover {
   background-color: #e9f7ee;
 }

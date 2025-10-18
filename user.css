@@ -18,31 +18,32 @@
       color: #c8e6c9 !important;
     }
 
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      height: 100%;
-      width: 250px;
-      background-color: #1b4332;
-      padding-top: 1rem;
-      overflow-y: auto;
-    }
-    .sidebar .nav-link {
-      color: #d8f3dc;
-      font-weight: 500;
-      padding: 10px 20px;
-      border-radius: 8px;
-    }
-    .sidebar .nav-link:hover {
-      background-color: #2d6a4f;
-      color: #fff;
-    }
-    .sidebar .nav-link.active {
-      background-color: #40916c;
-      color: white;
-    }
+ 
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  background-color: #1b4332;
+  padding-top: 1rem;
+  overflow-y: auto;
+}
+.sidebar .nav-link {
+  color: #d8f3dc;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+.sidebar .nav-link:hover {
+  background-color: #2d6a4f;
+  color: #fff;
+}
+.sidebar .nav-link.active {
+  background-color: #40916c;
+  color: white;
+}
 
     /* Main Content */
     .main-content {
@@ -50,12 +51,12 @@
  
       padding: 20px;
     }
-    .card {
-      border-radius: 14px;
-      border: none;
-      background-color: #ffffff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    }
+ .card{
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
     .note {
       font-size: 0.9rem;
       background: #e8f5e9;
@@ -71,4 +72,50 @@
 .table td, .table th {
   text-align: center;
   vertical-align: middle;
+}
+
+.table thead th {
+  color: black;
+}
+
+/* Role Filter styled like button */
+#roleFilter {
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background-color: #198754; /* Bootstrap green */
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: auto; /* keeps it inline with other elements */
+  max-width: 200px; /* optional, prevents it from stretching too far */
+  display: inline-block;
+}
+
+/* Add down arrow */
+#roleFilter::after {
+  content: '▼';
+  float: right;
+  margin-left: 5px;
+  pointer-events: none;
+  color: #fff;
+}
+
+/* Dropdown options */
+#roleFilter option {
+  background-color: #fff; /* white background */
+  color: #000; /* black text */
+}
+
+#roleFilter option:hover {
+  background-color: #198754; /* green hover */
+  color: #fff;
+}
+
+#roleFilter:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
 }

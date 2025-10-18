@@ -69,6 +69,7 @@
           <table class="table table-hover align-middle text-center" id="articlesTable">
             <thead class="table-success">
               <tr>
+                <th>ID</th>
                 <th>Title</th>
                 <th>Date</th>
                 <th>Category</th>
@@ -78,6 +79,7 @@
             </thead>
             <tbody id="articleList">
               <tr>
+                <td>N001</td>
                 <td>Waste Segregation Drive</td>
                 <td>Oct 16, 2025</td>
                 <td>News</td>
@@ -89,6 +91,7 @@
                 </td>
               </tr>
               <tr>
+                <td>N002</td>
                 <td>Schedule Update (Zone 3)</td>
                 <td>Oct 15, 2025</td>
                 <td>Update</td>
@@ -100,6 +103,7 @@
                 </td>
               </tr>
               <tr>
+                <td>N003</td>
                 <td>Barangay Cleanup Results</td>
                 <td>Oct 10, 2025</td>
                 <td>Report</td>
@@ -128,6 +132,10 @@
         <div class="modal-body">
           <form id="articleForm">
             <input type="hidden" id="editIndex">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Article ID</label>
+              <input type="text" class="form-control" id="articleID" required>
+            </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">Title</label>
               <input type="text" class="form-control" id="articleTitle" required>
@@ -176,115 +184,158 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const articleList = document.getElementById("articleList");
-    const searchInput = document.getElementById("searchInput");
-    const articleForm = document.getElementById("articleForm");
-    const modal = new bootstrap.Modal(document.getElementById("addArticleModal"));
-    let editIndex = null;
+  const articleList = document.getElementById("articleList");
+const searchInput = document.getElementById("searchInput");
+const articleForm = document.getElementById("articleForm");
+const modal = new bootstrap.Modal(document.getElementById("addArticleModal"));
+let editIndex = null;
 
-    // Search Function
-    searchInput.addEventListener("keyup", () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      Array.from(articleList.children).forEach(row => {
-        const title = row.children[0].textContent.toLowerCase();
-        row.style.display = title.includes(searchTerm) ? "" : "none";
-      });
-    });
+// Auto-generate Article ID
+function generateArticleID() {
+  const lastRow = articleList.lastElementChild;
+  if (!lastRow) return "N001"; // First article
+  const lastID = lastRow.children[0].textContent; // e.g., "N003"
+  const num = parseInt(lastID.slice(1)) + 1;
+  return "N" + num.toString().padStart(3, "0"); // e.g., "N004"
+}
 
-    // Add / Edit Article
-    articleForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const title = document.getElementById("articleTitle").value;
-      const date = document.getElementById("articleDate").value;
-      const category = document.getElementById("articleCategory").value;
+// Open Add Article Modal
+document.querySelector('[data-bs-target="#addArticleModal"]').addEventListener("click", () => {
+  editIndex = null; // Reset edit
+  document.getElementById("articleID").value = generateArticleID(); // Auto-fill ID
+  articleForm.reset(); // Clear other fields
+});
 
-      if (editIndex === null) {
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-          <td>${title}</td>
-          <td>${new Date(date).toDateString()}</td>
-          <td>${category}</td>
-          <td><span class="badge bg-success">Active</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary editBtn"><i class="bi bi-pencil-square"></i></button>
-            <button class="btn btn-sm btn-danger deleteBtn"><i class="bi bi-trash"></i></button>
-            <button class="btn btn-sm btn-warning publishBtn">Unpublish</button>
-          </td>`;
-        articleList.appendChild(newRow);
-      } else {
-        const row = articleList.children[editIndex];
-        row.children[0].textContent = title;
-        row.children[1].textContent = new Date(date).toDateString();
-        row.children[2].textContent = category;
-        editIndex = null;
-      }
+// Validate required fields
+function validateForm() {
+  const title = document.getElementById("articleTitle").value.trim();
+  const date = document.getElementById("articleDate").value.trim();
+  const category = document.getElementById("articleCategory").value.trim();
+  return title && date && category;
+}
 
-      modal.hide();
-      articleForm.reset();
-    });
-
-    // Save Draft
-    document.getElementById("saveDraftBtn").addEventListener("click", () => {
-      const title = document.getElementById("articleTitle").value;
-      const date = document.getElementById("articleDate").value;
-      const category = document.getElementById("articleCategory").value;
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td>${title}</td>
-        <td>${new Date(date).toDateString()}</td>
-        <td>${category}</td>
-        <td><span class="badge bg-secondary">Draft</span></td>
-        <td>
-          <button class="btn btn-sm btn-primary editBtn"><i class="bi bi-pencil-square"></i></button>
-          <button class="btn btn-sm btn-danger deleteBtn"><i class="bi bi-trash"></i></button>
-          <button class="btn btn-sm btn-success publishBtn">Publish</button>
-        </td>`;
-      articleList.appendChild(newRow);
-      modal.hide();
-      articleForm.reset();
-    });
-
-    // Table Actions
-    articleList.addEventListener("click", (e) => {
-      if (e.target.closest(".editBtn")) {
-        const row = e.target.closest("tr");
-        editIndex = Array.from(articleList.children).indexOf(row);
-        document.getElementById("articleTitle").value = row.children[0].textContent;
-        document.getElementById("articleDate").value = new Date(row.children[1].textContent).toISOString().split('T')[0];
-        document.getElementById("articleCategory").value = row.children[2].textContent;
-        modal.show();
-      }
-
-      if (e.target.closest(".deleteBtn")) {
-        if (confirm("Delete this article?")) e.target.closest("tr").remove();
-      }
-
-      if (e.target.closest(".publishBtn")) {
-        const row = e.target.closest("tr");
-        const status = row.children[3].querySelector("span");
-        const btn = e.target.closest(".publishBtn");
-        if (status.classList.contains("bg-success")) {
-          status.className = "badge bg-secondary";
-          status.textContent = "Draft";
-          btn.className = "btn btn-sm btn-success publishBtn";
-          btn.textContent = "Publish";
-        } else {
-          status.className = "badge bg-success";
-          status.textContent = "Active";
-          btn.className = "btn btn-sm btn-warning publishBtn";
-          btn.textContent = "Unpublish";
-        }
-      }
-    });
-      const logoutBtn = document.getElementById('logoutBtn');
-
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default link action
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      window.location.href = "index.html"; // Redirect to login
-    }
+// Search Function
+searchInput.addEventListener("keyup", () => {
+  const searchTerm = searchInput.value.toLowerCase();
+  Array.from(articleList.children).forEach(row => {
+    const title = row.children[1].textContent.toLowerCase();
+    row.style.display = title.includes(searchTerm) ? "" : "none";
   });
+});
+
+// Add / Edit Article
+articleForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!validateForm()) {
+    alert("Please fill in all required fields before publishing.");
+    return;
+  }
+
+  const id = document.getElementById("articleID").value.trim();
+  const title = document.getElementById("articleTitle").value.trim();
+  const date = document.getElementById("articleDate").value;
+  const category = document.getElementById("articleCategory").value;
+
+  if (editIndex === null) {
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
+      <td>${id}</td>
+      <td>${title}</td>
+      <td>${new Date(date).toDateString()}</td>
+      <td>${category}</td>
+      <td><span class="badge bg-success">Active</span></td>
+      <td>
+        <button class="btn btn-sm btn-primary editBtn"><i class="bi bi-pencil-square"></i></button>
+        <button class="btn btn-sm btn-danger deleteBtn"><i class="bi bi-trash"></i></button>
+        <button class="btn btn-sm btn-warning publishBtn">Unpublish</button>
+      </td>`;
+    articleList.appendChild(newRow);
+  } else {
+    const row = articleList.children[editIndex];
+    row.children[0].textContent = id;
+    row.children[1].textContent = title;
+    row.children[2].textContent = new Date(date).toDateString();
+    row.children[3].textContent = category;
+    editIndex = null;
+  }
+
+  modal.hide();
+  articleForm.reset();
+});
+
+// Save Draft
+document.getElementById("saveDraftBtn").addEventListener("click", () => {
+  if (!validateForm()) {
+    alert("Please fill in all required fields before saving as draft.");
+    return;
+  }
+
+  const id = document.getElementById("articleID").value.trim();
+  const title = document.getElementById("articleTitle").value.trim();
+  const date = document.getElementById("articleDate").value;
+  const category = document.getElementById("articleCategory").value;
+
+  const newRow = document.createElement("tr");
+  newRow.innerHTML = `
+    <td>${id}</td>
+    <td>${title}</td>
+    <td>${new Date(date).toDateString()}</td>
+    <td>${category}</td>
+    <td><span class="badge bg-secondary">Draft</span></td>
+    <td>
+      <button class="btn btn-sm btn-primary editBtn"><i class="bi bi-pencil-square"></i></button>
+      <button class="btn btn-sm btn-danger deleteBtn"><i class="bi bi-trash"></i></button>
+      <button class="btn btn-sm btn-success publishBtn">Publish</button>
+    </td>`;
+  articleList.appendChild(newRow);
+  modal.hide();
+  articleForm.reset();
+});
+
+// Table Actions
+articleList.addEventListener("click", (e) => {
+  const target = e.target.closest("button");
+  if (!target) return;
+  const row = target.closest("tr");
+
+  if (target.classList.contains("editBtn")) {
+    editIndex = Array.from(articleList.children).indexOf(row);
+    document.getElementById("articleID").value = row.children[0].textContent;
+    document.getElementById("articleTitle").value = row.children[1].textContent;
+    document.getElementById("articleDate").value = new Date(row.children[2].textContent).toISOString().split('T')[0];
+    document.getElementById("articleCategory").value = row.children[3].textContent;
+    modal.show();
+  }
+
+  if (target.classList.contains("deleteBtn")) {
+    if (confirm("Delete this article?")) row.remove();
+  }
+
+  if (target.classList.contains("publishBtn")) {
+    const status = row.children[4].querySelector("span");
+    if (status.classList.contains("bg-success")) {
+      status.className = "badge bg-secondary";
+      status.textContent = "Draft";
+      target.className = "btn btn-sm btn-success publishBtn";
+      target.textContent = "Publish";
+    } else {
+      status.className = "badge bg-success";
+      status.textContent = "Active";
+      target.className = "btn btn-sm btn-warning publishBtn";
+      target.textContent = "Unpublish";
+    }
+  }
+});
+
+// Logout
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to log out?")) {
+    window.location.href = "index.html";
+  }
+});
+
   </script>
 </body>
 </html>

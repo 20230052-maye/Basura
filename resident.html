@@ -10,10 +10,10 @@
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="resident.css">
 </head>
 <body>
-
   <!-- Top Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid">
@@ -26,244 +26,225 @@
           <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle"></i> Admin
           </a>
-         <ul class="dropdown-menu dropdown-menu-end">
-  <li><hr class="dropdown-divider"></li>
-  <li>
-    <a class="dropdown-item text-center" href="#" id="logoutBtn">
-      Logout <i class="bi bi-box-arrow-right me-1"></i>
-    </a>
-  </li>
-</ul>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-center" href="#" id="logoutBtn">
+                Logout <i class="bi bi-box-arrow-right me-1"></i>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </nav>
 
   <!-- Sidebar -->
   <div class="sidebar">
     <nav class="nav flex-column">
-      <a class="nav-link" href="dashbboard.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
+      <a class="nav-link" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
       <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i>Routes & Schedules</a>
       <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i>Trucks & Collectors</a>
       <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i>Collection Records</a>
       <a class="nav-link active" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i>Resident Reports</a>
       <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports</a>
       <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i>Announcements</a>
-    <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
-      <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
-      <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i> Settings</a>
+      <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i>News & Articles</a>
+      <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i>User Management</a>
+      <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i>Settings</a>
     </nav>
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
-    <div class="container-fluid px-4">
-      <div class="card p-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-            <h4 class="fw-semibold text-dark">
-            <i class="bi bi-person-lines-fill me-2 text-success"></i>Resident Reports
-          </h4>
+  <div class="main-content p-4">
+    <div class="card p-4 shadow-sm mt-2">
+      <h4 class="fw-semibold text-dark mb-3">
+        <i class="bi bi-person-lines-fill me-2 text-success"></i>Resident Reports Management
+      </h4>
 
-          <!-- Filter Dropdown -->
-          <div class="dropdown filter-dropdown">
-            <button class="btn btn-success dropdown-toggle d-flex align-items-center"
-                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-funnel-fill me-2"></i>Filter Reports
-            </button>
-            <div class="dropdown-menu p-3 shadow filter-box">
-              <div class="mb-3">
-                <label for="filterBarangay" class="form-label fw-semibold">Barangay</label>
-                <select id="filterBarangay" class="form-select">
-                  <option value="">Select Barangay</option>
-                  <option value="Sampaloc">Sampaloc</option>
-                  <option value="Guisguis">Guisguis</option>
-                  <option value="Poblacion">Poblacion</option>
-                </select>
-              </div>
+      <!-- Filter Dropdown -->
+      <div class="d-flex justify-content-end mb-3">
+        <div class="dropdown">
+          <button class="btn btn-outline-success dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-funnel-fill me-2"></i>Filter Reports
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-3 shadow" style="min-width: 250px;">
+            <div class="mb-2">
+              <label class="form-label fw-semibold">Barangay</label>
+              <select id="filterBarangay" class="form-select">
+                <option value="">All Barangays</option>
+                <option value="Sampaloc">Sampaloc</option>
+                <option value="Guisguis">Guisguis</option>
+                <option value="Poblacion">Poblacion</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label fw-semibold">Date</label>
+              <input type="date" id="filterDate" class="form-control">
+            </div>
+            <div class="mb-2">
+              <label class="form-label fw-semibold">Status</label>
+              <select id="filterStatus" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+            </div>
 
-              <div class="mb-3">
-                <label for="filterDate" class="form-label fw-semibold">Date</label>
-                <input type="date" id="filterDate" class="form-control">
-              </div>
-
-              <div class="mb-3">
-                <label for="filterStatus" class="form-label fw-semibold">Status</label>
-                <select id="filterStatus" class="form-select">
-                  <option value="">Select Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Resolved">Resolved</option>
-                </select>
-              </div>
-
-              <div class="d-grid gap-2">
-                <button id="filterBtn" class="btn btn-success"><i class="bi bi-filter-circle me-1"></i>Apply</button>
-              </div>
+            <div class="d-flex justify-content-between mt-3">
+              <button class="btn btn-success btn-sm w-100" id="filterBtn">
+                <i class="bi bi-check-circle me-1"></i>Apply
+              </button>
             </div>
           </div>
         </div>
-
-        <!-- Table Section -->
-        <div class="table-wrapper">
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Resident</th>
-                  <th>Barangay</th>
-                  <th>Issue</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <!-- Inside your table body, add an "Edit" button next to the status -->
-<tbody id="reportBody">
-  <tr>
-    <td>1</td>
-    <td>Maria R.</td>
-    <td>Sampaloc</td>
-    <td>Missed Pickup</td>
-    <td>2025-10-15</td>
-    <td>
-      <span class="badge bg-warning text-dark">Pending</span>
-      <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
-    </td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>Jose P.</td>
-    <td>Guisguis</td>
-    <td>Overflow Bin</td>
-    <td>2025-10-16</td>
-    <td>
-      <span class="badge bg-success">Resolved</span>
-      <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
-    </td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Ana S.</td>
-    <td>Poblacion</td>
-    <td>Missed Pickup</td>
-    <td>2025-10-17</td>
-    <td>
-      <span class="badge bg-warning text-dark">Pending</span>
-      <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
-    </td>
-  </tr>
-</tbody>
-<!-- Edit Status Modal -->
-<div class="modal fade" id="editStatusModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit Status</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
-        <form id="editStatusForm">
-          <div class="mb-3">
-            <label for="statusSelect" class="form-label">Select Status</label>
-            <select id="statusSelect" class="form-select">
-              <option value="Pending">Pending</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-circle me-1"></i>Save Status</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
-            </table>
+      <!-- Table Section -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle text-center">
+          <thead class="table-success">
+            <tr>
+              <th>#</th>
+              <th>Resident</th>
+              <th>Barangay</th>
+              <th>Issue</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="reportBody">
+            <tr>
+              <td>1</td>
+              <td>Maria R.</td>
+              <td>Sampaloc</td>
+              <td>Missed Pickup</td>
+              <td>2025-10-15</td>
+              <td>
+                <span class="badge bg-warning text-dark">Pending</span>
+                <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jose P.</td>
+              <td>Guisguis</td>
+              <td>Overflow Bin</td>
+              <td>2025-10-16</td>
+              <td>
+                <span class="badge bg-success">Resolved</span>
+                <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Ana S.</td>
+              <td>Poblacion</td>
+              <td>Missed Pickup</td>
+              <td>2025-10-17</td>
+              <td>
+                <span class="badge bg-warning text-dark">Pending</span>
+                <button class="btn btn-sm btn-outline-success ms-2 edit-status-btn" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Edit Status Modal -->
+      <div class="modal fade" id="editStatusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+              <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit Status</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editStatusForm">
+                <div class="mb-3">
+                  <label for="statusSelect" class="form-label">Select Status</label>
+                  <select id="statusSelect" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-circle me-1"></i>Save Status</button>
+              </form>
+            </div>
           </div>
         </div>
-
       </div>
+
     </div>
   </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- JS Filtering -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const filterBtn = document.getElementById("filterBtn");
-  const filterBarangay = document.getElementById("filterBarangay");
-  const filterDate = document.getElementById("filterDate");
-  const filterStatus = document.getElementById("filterStatus");
-  const reportBody = document.getElementById("reportBody");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tableBody = document.getElementById("reportBody");
+      const filterBarangay = document.getElementById("filterBarangay");
+      const filterDate = document.getElementById("filterDate");
+      const filterStatus = document.getElementById("filterStatus");
+      const filterBtn = document.getElementById("filterBtn");
+      let currentRow = null;
 
-  let currentRow = null;
+      // Apply filter (multi-criteria)
+      filterBtn.addEventListener("click", () => {
+        const barangay = filterBarangay.value.toLowerCase();
+        const date = filterDate.value;
+        const status = filterStatus.value;
 
-  // Function to apply filter
-  function applyFilter() {
-    const barangayValue = filterBarangay.value.trim().toLowerCase();
-    const dateValue = filterDate.value.trim();
-    const statusValue = filterStatus.value.trim();
+        [...tableBody.rows].forEach((row) => {
+          const rowBarangay = row.cells[2].textContent.toLowerCase();
+          const rowDate = row.cells[4].textContent;
+          const rowStatus = row.querySelector("span.badge").textContent.trim();
 
-    const tableRows = reportBody.querySelectorAll("tr");
+          const show = 
+            (barangay === "" || rowBarangay === barangay) &&
+            (date === "" || rowDate === date) &&
+            (status === "" || rowStatus === status);
 
-    tableRows.forEach(row => {
-      const barangayCell = row.cells[2].textContent.trim().toLowerCase();
-      const dateCell = row.cells[4].textContent.trim();
-      const statusCell = row.querySelector("span.badge").textContent.trim();
+          row.style.display = show ? "" : "none";
+        });
+      });
 
-      const matchBarangay = !barangayValue || barangayCell === barangayValue;
-      const matchDate = !dateValue || dateCell === dateValue;
-      const matchStatus = !statusValue || statusCell === statusValue;
+      // Edit Status button
+      tableBody.addEventListener("click", (e) => {
+        if (e.target.classList.contains("edit-status-btn")) {
+          currentRow = e.target.closest("tr");
+          document.getElementById("statusSelect").value = currentRow.querySelector("span.badge").textContent.trim();
+        }
+      });
 
-      row.style.display = (matchBarangay && matchDate && matchStatus) ? "" : "none";
+      // Save status
+      document.getElementById("editStatusForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newStatus = document.getElementById("statusSelect").value;
+        const badge = currentRow.querySelector("span.badge");
+
+        if (newStatus === "Pending") {
+          badge.textContent = "Pending";
+          badge.className = "badge bg-warning text-dark";
+        } else {
+          badge.textContent = "Resolved";
+          badge.className = "badge bg-success";
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById("editStatusModal"));
+        modal.hide();
+      });
+
+      // Logout
+      const logoutBtn = document.getElementById('logoutBtn');
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(confirm("Are you sure you want to log out?")) {
+          window.location.href = "index.html";
+        }
+      });
     });
-  }
-
-  // Filter button click
-  filterBtn.addEventListener("click", () => {
-    applyFilter();
-  });
-
-  // Edit Status buttons (delegate event)
-  reportBody.addEventListener("click", (e) => {
-    if (e.target.classList.contains("edit-status-btn")) {
-      currentRow = e.target.closest("tr");
-      const currentStatus = currentRow.querySelector("span.badge").textContent.trim();
-      document.getElementById("statusSelect").value = currentStatus;
-    }
-  });
-
-  // Save status from modal
-  document.getElementById("editStatusForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const newStatus = document.getElementById("statusSelect").value;
-    const badge = currentRow.querySelector("span.badge");
-
-    // Update badge text and color
-    if (newStatus === "Pending") {
-      badge.textContent = "Pending";
-      badge.className = "badge bg-warning text-dark";
-    } else {
-      badge.textContent = "Resolved";
-      badge.className = "badge bg-success";
-    }
-
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById("editStatusModal"));
-    modal.hide();
-
-    // Reapply filter so table stays consistent
-    applyFilter();
-  });
-});
-  const logoutBtn = document.getElementById('logoutBtn');
-
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default link action
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      window.location.href = "index.html"; // Redirect to login
-    }
-  });
-</script>
-
+  </script>
 </body>
 </html>
