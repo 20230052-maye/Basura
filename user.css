@@ -3,6 +3,7 @@
       background-color: #f1f8f4;
       overflow-x: hidden;
       color: #2e2e2e;
+      
     }
 
     /* Navbar */
@@ -46,7 +47,7 @@
     /* Main Content */
     .main-content {
       margin-left: 260px;
-      margin-top: 80px;
+ 
       padding: 20px;
     }
     .card {

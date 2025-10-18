@@ -30,10 +30,14 @@
           <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle"></i> Admin
           </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center" href="#">Logout <i class="bi bi-box-arrow-right me-1"></i></a></li>
-          </ul>
+         <ul class="dropdown-menu dropdown-menu-end">
+  <li><hr class="dropdown-divider"></li>
+  <li>
+    <a class="dropdown-item text-center" href="#" id="logoutBtn">
+      Logout <i class="bi bi-box-arrow-right me-1"></i>
+    </a>
+  </li>
+</ul>
         </li>
       </ul>
     </div>
@@ -42,7 +46,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <nav class="nav flex-column">
-      <a class="nav-link" href="index.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
+      <a class="nav-link" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
       <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i>Routes & Schedules</a>
       <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i>Trucks & Collectors</a>
       <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i>Collection Records</a>
@@ -191,6 +195,15 @@
     function showSummary() {
       alert("Monthly Summary:\n\n- Total Waste Collected: 5,890 kg\n- Average Resolution Rate: 82%\n- Most Active Barangay: Barangay 3");
     }
+      const logoutBtn = document.getElementById('logoutBtn');
+
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent default link action
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      window.location.href = "login.html"; // Redirect to login
+    }
+  });
   </script>
 </body>
 </html>
