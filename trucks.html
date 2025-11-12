@@ -75,7 +75,7 @@
         <table class="table table-hover align-middle" id="truckTable">
           <thead class="table-light text-center">
             <tr>
-              <th>ID</th>
+              <th>TruckID</th>
               <th>Plate No.</th>
               <th>Status</th>
               <th>Collector Assigned</th>
@@ -115,7 +115,7 @@
         <table class="table table-hover align-middle" id="collectorTable">
           <thead class="table-light text-center">
             <tr>
-              <th>ID</th>
+              <th>CollectorID</th>
               <th>Name</th>
               <th>Assigned Truck ID</th>
               <th>Contact</th>
@@ -162,7 +162,9 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Collector Assigned</label>
-              <input type="text" class="form-control" id="truckCollector">
+              <select class="form-select" id="truckCollector">
+                <!-- Collector names will be populated dynamically -->
+              </select>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-success">Save Truck</button>
@@ -270,6 +272,27 @@
     const truckModal = document.querySelector("#addTruckModal");
     const collectorModal = document.querySelector("#addCollectorModal");
 
+    // Sample collectors from User Management
+    let collectorsFromUsers = [
+      { id: 1000, name: "Juan Dela Cruz" },
+      { id: 1001, name: "Maria Santos" },
+      { id: 1002, name: "Pedro Reyes" }
+    ];
+
+    // Populate truckCollector dropdown
+    const truckCollectorSelect = document.getElementById("truckCollector");
+    function populateCollectorDropdown() {
+      truckCollectorSelect.innerHTML = '<option value="">Select Collector</option>';
+      collectorsFromUsers.forEach(c => {
+        const option = document.createElement("option");
+        option.value = c.name;
+        option.textContent = c.name;
+        truckCollectorSelect.appendChild(option);
+      });
+    }
+    populateCollectorDropdown();
+    truckModal.addEventListener("show.bs.modal", populateCollectorDropdown);
+
     // Truck Add/Edit
     document.querySelector("#truckForm").addEventListener("submit", e => {
       e.preventDefault();
@@ -353,6 +376,10 @@
             <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
             <button class="btn btn-sm btn-danger delete-collector"><i class="bi bi-trash"></i></button>
           </td>`;
+        
+        // Add new collector to the dropdown
+        collectorsFromUsers.push({ id: id, name: name });
+        populateCollectorDropdown();
       }
       e.target.reset();
       bootstrap.Modal.getInstance(collectorModal).hide();
@@ -380,7 +407,15 @@
 
     // Confirm Delete
     confirmDeleteBtn.addEventListener("click", () => {
-      if (rowToDelete) rowToDelete.remove();
+      if (rowToDelete) {
+        // Remove from collector dropdown if deleting collector
+        if (rowToDelete.parentElement.id === "collectorTable") {
+          const nameToRemove = rowToDelete.children[1].textContent;
+          collectorsFromUsers = collectorsFromUsers.filter(c => c.name !== nameToRemove);
+          populateCollectorDropdown();
+        }
+        rowToDelete.remove();
+      }
       deleteModal.hide();
     });
 
