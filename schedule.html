@@ -87,14 +87,37 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title"><i class="bi bi-calendar-check-fill me-2 text-success"></i>Schedule Management</h4>
-      <div class="d-flex justify-content-end align-items-center gap-2 my-2">
-        <select id="scheduleRouteFilter" class="form-select w-auto">
+<!-- FILTER + ADD BUTTON ROW -->
+<div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+  <!-- Add Schedule Button -->
+  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+    <i class="bi bi-plus-circle me-1"></i> Add Schedule
+  </button>
+
+  <!-- Filter Records Dropdown -->
+  <div class="dropdown">
+    <button class="btn btn-outline-success dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-funnel-fill me-1"></i> Filter Records
+    </button>
+    <div class="dropdown-menu p-3" style="width:300px;">
+      <div class="mb-2">
+        <label class="form-label">Route</label>
+        <select id="scheduleRouteFilter" class="form-select">
           <option value="">All Routes</option>
         </select>
-        <input type="date" id="scheduleDateFilter" class="form-control w-auto">
-        <button class="btn btn-secondary" id="resetScheduleFilter">Reset</button>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addScheduleModal"><i class="bi bi-plus-circle me-1"></i> Add Schedule</button>
       </div>
+      <div class="mb-2">
+        <label class="form-label">Date</label>
+        <input type="text" id="scheduleDateFilter" class="form-control" placeholder="Select Date">
+      </div>
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-secondary btn-sm" id="resetScheduleFilter">Reset</button>
+        <button class="btn btn-success btn-sm" id="applyScheduleFilter">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <div class="table-responsive">
         <table class="table table-bordered align-middle">
@@ -116,7 +139,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Add/Edit Route Modal -->
@@ -137,9 +159,7 @@
             <label class="form-label">Barangay</label>
             <input type="text" class="form-control" id="barangayName" required>
           </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-success px-5">Save</button>
-          </div>
+          <div class="text-center"><button type="submit" class="btn btn-success px-5">Save</button></div>
         </form>
       </div>
     </div>
@@ -189,9 +209,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   let routes = [
     {id:1, name:"Route 1", barangay:"Barangay 1"},
-    {id:2, name:"Route 1", barangay:"Barangay 2"},
-    {id:3, name:"Route 2", barangay:"Barangay 3"},
-    {id:4, name:"Route 2", barangay:"Barangay 4"}
+    {id:2, name:"Route 2", barangay:"Barangay 2"},
+    {id:3, name:"Route 3", barangay:"Barangay 3"},
+    {id:4, name:"Route 4", barangay:"Barangay 4"}
   ];
   let schedules = [
     {id:1, routeName:"Route 1", barangay:"Barangay 1", truck:1, collector:"Juan", date:"2025-10-20", start:"07:00", end:"11:00", type:"Recyclable"}
@@ -206,8 +226,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const scheduleRouteFilter = document.getElementById("scheduleRouteFilter");
   const scheduleDateFilter = document.getElementById("scheduleDateFilter");
   const resetScheduleFilter = document.getElementById("resetScheduleFilter");
+  const applyScheduleFilter = document.getElementById("applyScheduleFilter");
   const scheduleRouteName = document.getElementById("scheduleRouteName");
   const scheduleBarangay = document.getElementById("scheduleBarangay");
+
+  flatpickr("#collectionDate",{dateFormat:"Y-m-d"});
+  flatpickr("#scheduleDateFilter",{dateFormat:"Y-m-d"});
 
   function renderRoutes(filter="") {
     routesTableBody.innerHTML = "";
@@ -235,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
       row.querySelector(".delete-route").addEventListener("click", ()=>{
         if(confirm("Are you sure to delete this route?")){
           const deletedRoute = routes.find(route=>route.id===r.id);
-          // Remove associated schedules
           schedules = schedules.filter(sch=>sch.routeName !== deletedRoute.name);
           routes = routes.filter(route=>route.id!==r.id);
           renderRoutes(routeFilter.value);
@@ -246,10 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function renderSchedules() {
+  function renderSchedules(routeVal="", dateVal="") {
     scheduleTableBody.innerHTML = "";
-    let routeVal = scheduleRouteFilter.value;
-    let dateVal = scheduleDateFilter.value;
     schedules.filter(s=>{
       return (!routeVal || s.routeName===routeVal) && (!dateVal || s.date===dateVal);
     }).forEach(s=>{
@@ -287,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.querySelector(".delete-schedule").addEventListener("click", ()=>{
         if(confirm("Are you sure to delete this schedule?")){
           schedules = schedules.filter(schedule=>schedule.id!==s.id);
-          renderSchedules();
+          renderSchedules(routeVal, dateVal);
         }
       });
     });
@@ -317,10 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const oldName = route.name;
       route.name = name;
       route.barangay = barangay;
-      // Update associated schedules
       schedules.forEach(sch=>{
         if(sch.routeName===oldName) sch.routeName=name;
-        if(sch.barangay===oldName) sch.barangay=barangay; // optional
       });
       editRouteId = null;
     } else {
@@ -331,78 +350,76 @@ document.addEventListener("DOMContentLoaded", () => {
     populateRouteFilters();
     renderSchedules();
     bootstrap.Modal.getInstance(document.getElementById("addRouteModal")).hide();
-    e.target.reset();
-    document.getElementById("routeModalTitle").textContent = "Add Route";
-  });
-
-  // Add/Edit Schedule
- // Add/Edit Schedule
-flatpickr("#collectionDate",{dateFormat:"Y-m-d"});
-document.getElementById("scheduleForm").addEventListener("submit", e=>{
-  e.preventDefault();
-  const routeNameVal = scheduleRouteName.value;
-  const barangayVal = scheduleBarangay.value;
-  const truckVal = document.getElementById("truckId").value;
-  const collectorVal = document.getElementById("collectorName").value;
-  const dateVal = document.getElementById("collectionDate").value;
-  const startVal = document.getElementById("startTime").value;
-  const endVal = document.getElementById("endTime").value;
-  const remarksVal = document.getElementById("remarks").value;
-
-  // --- TIME VALIDATION ---
-  if(startVal && endVal && endVal <= startVal){
-    alert("End time cannot be earlier than or equal to Start time!");
-    return; // stop form submission
-  }
-
-  if(editScheduleId){
-    const s = schedules.find(sch=>sch.id===editScheduleId);
-    s.routeName = routeNameVal;
-    s.barangay = barangayVal;
-    s.truck = truckVal;
-    s.collector = collectorVal;
-    s.date = dateVal;
-    s.start = startVal;
-    s.end = endVal;
-    s.type = remarksVal;
-    editScheduleId = null;
-  } else {
-    const newId = schedules.length ? Math.max(...schedules.map(s=>s.id))+1 : 1;
-    schedules.push({
-      id:newId,
-      routeName:routeNameVal,
-      barangay:barangayVal,
-      truck:truckVal,
-      collector:collectorVal,
-      date:dateVal,
-      start:startVal,
-      end:endVal,
-      type:remarksVal
-    });
-  }
-
-  renderSchedules();
-  bootstrap.Modal.getInstance(document.getElementById("addScheduleModal")).hide();
-  e.target.reset();
-  document.getElementById("scheduleModalTitle").textContent = "Add Schedule";
+    e.target
+.reset();
+document.getElementById("routeModalTitle").textContent = "Add Route";
 });
 
+// Add/Edit Schedule
+document.getElementById("scheduleForm").addEventListener("submit", e=>{
+e.preventDefault();
+const routeNameVal = scheduleRouteName.value;
+const barangayVal = scheduleBarangay.value;
+const truckVal = document.getElementById("truckId").value;
+const collectorVal = document.getElementById("collectorName").value;
+const dateVal = document.getElementById("collectionDate").value;
+const startVal = document.getElementById("startTime").value;
+const endVal = document.getElementById("endTime").value;
+const remarksVal = document.getElementById("remarks").value;
+if(startVal && endVal && endVal <= startVal){
+  alert("End time cannot be earlier than or equal to Start time!");
+  return;
+}
 
-  // Filters
-  routeFilter.addEventListener("change", ()=> renderRoutes(routeFilter.value));
-  scheduleRouteFilter.addEventListener("change", renderSchedules);
-  scheduleDateFilter.addEventListener("change", renderSchedules);
-  resetScheduleFilter.addEventListener("click",()=>{
-    scheduleRouteFilter.value="";
-    scheduleDateFilter.value="";
-    renderSchedules();
+if(editScheduleId){
+  const s = schedules.find(sch=>sch.id===editScheduleId);
+  s.routeName = routeNameVal;
+  s.barangay = barangayVal;
+  s.truck = truckVal;
+  s.collector = collectorVal;
+  s.date = dateVal;
+  s.start = startVal;
+  s.end = endVal;
+  s.type = remarksVal;
+  editScheduleId = null;
+} else {
+  const newId = schedules.length ? Math.max(...schedules.map(s=>s.id))+1 : 1;
+  schedules.push({
+    id:newId,
+    routeName:routeNameVal,
+    barangay:barangayVal,
+    truck:truckVal,
+    collector:collectorVal,
+    date:dateVal,
+    start:startVal,
+    end:endVal,
+    type:remarksVal
   });
+}
+renderSchedules();
+bootstrap.Modal.getInstance(document.getElementById("addScheduleModal")).hide();
+e.target.reset();
+document.getElementById("scheduleModalTitle").textContent = "Add Schedule";
+});
+// Filter buttons (Apply & Reset)
+applyScheduleFilter.addEventListener("click", ()=>{
+const routeVal = scheduleRouteFilter.value;
+const dateVal = scheduleDateFilter.value;
+renderSchedules(routeVal, dateVal);
+});
 
-  renderRoutes();
-  populateRouteFilters();
-  renderSchedules();
+resetScheduleFilter.addEventListener("click",()=>{
+scheduleRouteFilter.value="";
+scheduleDateFilter.value="";
+renderSchedules();
+});
+
+routeFilter.addEventListener("change", ()=> renderRoutes(routeFilter.value));
+
+renderRoutes();
+populateRouteFilters();
+renderSchedules();
 });
 </script>
 
-</body>
-</html>
+</body> </html> 
