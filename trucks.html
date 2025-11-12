@@ -124,11 +124,24 @@
             </tr>
           </thead>
           <tbody class="text-center">
+            <!-- Sample from User Management -->
             <tr>
               <td>1000</td>
               <td>Juan Dela Cruz</td>
               <td>1</td>
-              <td>0998-xxx-xxx</td>
+              <td>0998-123-456</td>
+              <td><span class="badge bg-success">Active</span></td>
+              <td>
+                <button class="btn btn-sm btn-warning edit-collector"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
+                <button class="btn btn-sm btn-danger delete-collector"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>1001</td>
+              <td>Maria Reyes</td>
+              <td>2</td>
+              <td>0998-987-654</td>
               <td><span class="badge bg-success">Active</span></td>
               <td>
                 <button class="btn btn-sm btn-warning edit-collector"><i class="bi bi-pencil-square"></i></button>
@@ -163,7 +176,7 @@
             <div class="mb-3">
               <label class="form-label">Collector Assigned</label>
               <select class="form-select" id="truckCollector">
-                <!-- Collector names will be populated dynamically -->
+                <!-- Dynamically populated from User Management -->
               </select>
             </div>
             <div class="text-center">
@@ -191,7 +204,9 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Name</label>
-              <input type="text" class="form-control" id="collectorName">
+              <select class="form-select" id="collectorName">
+                <!-- Dynamically populated from User Management -->
+              </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Assigned Truck</label>
@@ -229,222 +244,155 @@
     </div>
   </div>
 
-  <!-- Edit Status Modal -->
-  <div class="modal fade" id="editStatusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Status</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editStatusForm">
-            <div class="mb-3">
-              <label for="statusSelect" class="form-label">Select Status</label>
-              <select id="statusSelect" class="form-select">
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-success w-100">
-              <i class="bi bi-check-circle me-1"></i>Save Status
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const truckTable = document.querySelector("#truckTable tbody");
+  const collectorTable = document.querySelector("#collectorTable tbody");
 
+  let editingTruck = null;
+  let editingCollector = null;
+  let rowToDelete = null;
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let editingTruck = null;
-    let editingCollector = null;
-    let rowToDelete = null;
-    let rowBeingEditedStatus = null;
+  const deleteModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
 
-    const truckTable = document.querySelector("#truckTable tbody");
-    const collectorTable = document.querySelector("#collectorTable tbody");
-    const deleteModal = new bootstrap.Modal(document.querySelector("#deleteConfirmModal"));
-    const confirmDeleteBtn = document.querySelector("#confirmDeleteBtn");
+  // Sample collectors based on User Management
+  let users = [
+    {id:"C001", name:"Juan Dela Cruz", role:"Collector", status:"Active"},
+    {id:"R001", name:"Maria Reyes", role:"Resident", status:"Active"},
+    {id:"A001", name:"Admin Account", role:"Admin", status:"Active"}
+  ];
 
-    const truckModal = document.querySelector("#addTruckModal");
-    const collectorModal = document.querySelector("#addCollectorModal");
+  let collectorsFromUsers = users.filter(u => u.role === "Collector");
 
-    // Sample collectors from User Management
-    let collectorsFromUsers = [
-      { id: 1000, name: "Juan Dela Cruz" },
-      { id: 1001, name: "Maria Santos" },
-      { id: 1002, name: "Pedro Reyes" }
-    ];
+  const truckCollectorSelect = document.getElementById("truckCollector");
+  const collectorNameSelect = document.getElementById("collectorName");
 
-    // Populate truckCollector dropdown
-    const truckCollectorSelect = document.getElementById("truckCollector");
-    function populateCollectorDropdown() {
-      truckCollectorSelect.innerHTML = '<option value="">Select Collector</option>';
-      collectorsFromUsers.forEach(c => {
-        const option = document.createElement("option");
-        option.value = c.name;
-        option.textContent = c.name;
-        truckCollectorSelect.appendChild(option);
-      });
+  function populateCollectorDropdowns() {
+    truckCollectorSelect.innerHTML = '<option value="">Select Collector</option>';
+    collectorNameSelect.innerHTML = '<option value="">Select Collector</option>';
+    collectorsFromUsers.forEach(c => {
+      const option1 = document.createElement("option");
+      option1.value = c.name;
+      option1.textContent = c.name;
+      truckCollectorSelect.appendChild(option1);
+
+      const option2 = document.createElement("option");
+      option2.value = c.name;
+      option2.textContent = c.name;
+      collectorNameSelect.appendChild(option2);
+    });
+  }
+
+  populateCollectorDropdowns();
+
+  // Truck form submit
+  document.getElementById("truckForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const id = document.getElementById("truckId").value.trim();
+    const plate = document.getElementById("truckPlate").value.trim();
+    const collector = truckCollector.value.trim();
+    if (!id || !plate || !collector) return alert("Fill all fields");
+
+    if (editingTruck) {
+      editingTruck.children[0].textContent = id;
+      editingTruck.children[1].textContent = plate;
+      editingTruck.children[3].textContent = collector;
+      editingTruck = null;
+    } else {
+      const row = truckTable.insertRow();
+      row.innerHTML = `
+        <td>${id}</td>
+        <td>${plate}</td>
+        <td><span class="badge bg-success">Active</span></td>
+        <td>${collector}</td>
+        <td>
+          <button class="btn btn-sm btn-warning edit-truck"><i class="bi bi-pencil-square"></i></button>
+          <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
+          <button class="btn btn-sm btn-danger delete-truck"><i class="bi bi-trash"></i></button>
+        </td>`;
     }
-    populateCollectorDropdown();
-    truckModal.addEventListener("show.bs.modal", populateCollectorDropdown);
-
-    // Truck Add/Edit
-    document.querySelector("#truckForm").addEventListener("submit", e => {
-      e.preventDefault();
-      const id = truckId.value.trim();
-      const plate = truckPlate.value.trim().toUpperCase();
-      const collector = truckCollector.value.trim();
-      if (!id || !plate || !collector) return alert("Please fill all fields.");
-
-      const existing = [...truckTable.rows].some(row => row.children[1].textContent === plate && row !== editingTruck);
-      if (existing) return alert("Duplicate Plate Number not allowed.");
-
-      if (editingTruck) {
-        editingTruck.children[0].textContent = id;
-        editingTruck.children[1].textContent = plate;
-        editingTruck.children[3].textContent = collector;
-        editingTruck = null;
-      } else {
-        const row = truckTable.insertRow();
-        row.innerHTML = `
-          <td>${id}</td>
-          <td>${plate}</td>
-          <td><span class="badge bg-success">Active</span></td>
-          <td>${collector}</td>
-          <td>
-            <button class="btn btn-sm btn-warning edit-truck"><i class="bi bi-pencil-square"></i></button>
-            <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
-            <button class="btn btn-sm btn-danger delete-truck"><i class="bi bi-trash"></i></button>
-          </td>`;
-      }
-      e.target.reset();
-      bootstrap.Modal.getInstance(truckModal).hide();
-    });
-
-    truckTable.addEventListener("click", e => {
-      const row = e.target.closest("tr");
-      if (e.target.closest(".edit-truck")) {
-        editingTruck = row;
-        truckId.value = row.children[0].textContent;
-        truckPlate.value = row.children[1].textContent;
-        truckCollector.value = row.children[3].textContent;
-        new bootstrap.Modal(truckModal).show();
-      } else if (e.target.closest(".delete-truck")) {
-        rowToDelete = row;
-        deleteModal.show();
-      } else if (e.target.closest(".edit-status")) {
-        rowBeingEditedStatus = row;
-        const badge = row.querySelector("span.badge");
-        document.getElementById("statusSelect").value = badge.textContent.trim();
-        new bootstrap.Modal(document.getElementById("editStatusModal")).show();
-      }
-    });
-
-    // Collector Add/Edit
-    document.querySelector("#collectorForm").addEventListener("submit", e => {
-      e.preventDefault();
-      const id = collectorId.value.trim();
-      const name = collectorName.value.trim();
-      const truck = collectorTruck.value.trim();
-      const contact = collectorContact.value.trim();
-      if (!id || !name || !truck || !contact) return alert("Please fill all fields.");
-
-      const existing = [...collectorTable.rows].some(row => row.children[0].textContent === id && row !== editingCollector);
-      if (existing) return alert("Duplicate Collector ID not allowed.");
-
-      if (editingCollector) {
-        editingCollector.children[0].textContent = id;
-        editingCollector.children[1].textContent = name;
-        editingCollector.children[2].textContent = "#" + truck;
-        editingCollector.children[3].textContent = contact;
-        editingCollector = null;
-      } else {
-        const row = collectorTable.insertRow();
-        row.innerHTML = `
-          <td>${id}</td>
-          <td>${name}</td>
-          <td>#${truck}</td>
-          <td>${contact}</td>
-          <td><span class="badge bg-success">Active</span></td>
-          <td>
-            <button class="btn btn-sm btn-warning edit-collector"><i class="bi bi-pencil-square"></i></button>
-            <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
-            <button class="btn btn-sm btn-danger delete-collector"><i class="bi bi-trash"></i></button>
-          </td>`;
-        
-        // Add new collector to the dropdown
-        collectorsFromUsers.push({ id: id, name: name });
-        populateCollectorDropdown();
-      }
-      e.target.reset();
-      bootstrap.Modal.getInstance(collectorModal).hide();
-    });
-
-    collectorTable.addEventListener("click", e => {
-      const row = e.target.closest("tr");
-      if (e.target.closest(".edit-collector")) {
-        editingCollector = row;
-        collectorId.value = row.children[0].textContent;
-        collectorName.value = row.children[1].textContent;
-        collectorTruck.value = row.children[2].textContent.replace("#", "");
-        collectorContact.value = row.children[3].textContent;
-        new bootstrap.Modal(collectorModal).show();
-      } else if (e.target.closest(".delete-collector")) {
-        rowToDelete = row;
-        deleteModal.show();
-      } else if (e.target.closest(".edit-status")) {
-        rowBeingEditedStatus = row;
-        const badge = row.querySelector("span.badge");
-        document.getElementById("statusSelect").value = badge.textContent.trim();
-        new bootstrap.Modal(document.getElementById("editStatusModal")).show();
-      }
-    });
-
-    // Confirm Delete
-    confirmDeleteBtn.addEventListener("click", () => {
-      if (rowToDelete) {
-        // Remove from collector dropdown if deleting collector
-        if (rowToDelete.parentElement.id === "collectorTable") {
-          const nameToRemove = rowToDelete.children[1].textContent;
-          collectorsFromUsers = collectorsFromUsers.filter(c => c.name !== nameToRemove);
-          populateCollectorDropdown();
-        }
-        rowToDelete.remove();
-      }
-      deleteModal.hide();
-    });
-
-    // Edit Status
-    document.getElementById("editStatusForm").addEventListener("submit", e => {
-      e.preventDefault();
-      if (!rowBeingEditedStatus) return;
-
-      const newStatus = document.getElementById("statusSelect").value;
-      const badge = rowBeingEditedStatus.querySelector("span.badge");
-      badge.textContent = newStatus;
-
-      if(newStatus === "Active") badge.className = "badge bg-success";
-      else if(newStatus === "Inactive") badge.className = "badge bg-warning text-dark";
-
-      const modalInstance = bootstrap.Modal.getInstance(document.getElementById("editStatusModal"));
-      modalInstance.hide();
-    });
-
+    e.target.reset();
+    bootstrap.Modal.getInstance(document.getElementById("addTruckModal")).hide();
   });
-    const logoutBtn = document.getElementById('logoutBtn');
 
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default link action
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      window.location.href = "index.html"; // Redirect to login
+  // Collector form submit
+  document.getElementById("collectorForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const id = document.getElementById("collectorId").value.trim();
+    const name = document.getElementById("collectorName").value.trim();
+    const truck = document.getElementById("collectorTruck").value.trim();
+    const contact = document.getElementById("collectorContact").value.trim();
+    if (!id || !name || !truck || !contact) return alert("Fill all fields");
+
+    if (editingCollector) {
+      editingCollector.children[0].textContent = id;
+      editingCollector.children[1].textContent = name;
+      editingCollector.children[2].textContent = truck;
+      editingCollector.children[3].textContent = contact;
+      editingCollector = null;
+    } else {
+      const row = collectorTable.insertRow();
+      row.innerHTML = `
+        <td>${id}</td>
+        <td>${name}</td>
+        <td>${truck}</td>
+        <td>${contact}</td>
+        <td><span class="badge bg-success">Active</span></td>
+        <td>
+          <button class="btn btn-sm btn-warning edit-collector"><i class="bi bi-pencil-square"></i></button>
+          <button class="btn btn-sm btn-primary edit-status"><i class="bi bi-toggle-on"></i></button>
+          <button class="btn btn-sm btn-danger delete-collector"><i class="bi bi-trash"></i></button>
+        </td>`;
+    }
+    e.target.reset();
+    bootstrap.Modal.getInstance(document.getElementById("addCollectorModal")).hide();
+  });
+
+  // Edit/Delete Truck & Collector
+  truckTable.addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    if (!row) return;
+    if (e.target.closest(".edit-truck")) {
+      editingTruck = row;
+      document.getElementById("truckId").value = row.children[0].textContent;
+      document.getElementById("truckPlate").value = row.children[1].textContent;
+      document.getElementById("truckCollector").value = row.children[3].textContent;
+      new bootstrap.Modal(document.getElementById("addTruckModal")).show();
+    } else if (e.target.closest(".delete-truck")) {
+      rowToDelete = row;
+      deleteModal.show();
     }
   });
-  </script>
+
+  collectorTable.addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    if (!row) return;
+    if (e.target.closest(".edit-collector")) {
+      editingCollector = row;
+      document.getElementById("collectorId").value = row.children[0].textContent;
+      document.getElementById("collectorName").value = row.children[1].textContent;
+      document.getElementById("collectorTruck").value = row.children[2].textContent;
+      document.getElementById("collectorContact").value = row.children[3].textContent;
+      new bootstrap.Modal(document.getElementById("addCollectorModal")).show();
+    } else if (e.target.closest(".delete-collector")) {
+      rowToDelete = row;
+      deleteModal.show();
+    }
+  });
+
+  document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+    if (rowToDelete) rowToDelete.remove();
+    rowToDelete = null;
+    deleteModal.hide();
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", e => {
+    e.preventDefault();
+    if (confirm("Are you sure you want to log out?")) window.location.href = "index.html";
+  });
+
+});
+</script>
 </body>
 </html>
