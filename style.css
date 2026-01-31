@@ -14,6 +14,10 @@ body {
   background-color: #f1f8f4;
 }
 
+.logo {
+  width: 50px;   /* adjust as needed */
+  height: auto;
+}
 
 /* Navbar */
 .navbar {
@@ -107,3 +111,46 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
+.truck-card {
+  text-align: center;
+}
+#truckMapContainer {
+  display: none;
+  height: 480px;
+  border-radius: 10px;
+}
+
+/* Garbage Bin Container */
+.garbage-bin {
+  width: 60px;
+  height: 100px;
+  background: #eee;
+  border: 3px solid #555;
+  border-radius: 8px 8px 10px 10px; /* rounded top */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end; /* content sticks to bottom */
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Fill bar inside bin */
+.garbage-fill {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 0 0 5px 5px; /* bottom corners rounded */
+}
+
+/* Colors */
+.bg-success-fill { background-color: #28a745; }
+.bg-warning-fill { background-color: #ffc107; color: #000; }
+.bg-danger-fill  { background-color: #dc3545; }

@@ -10,12 +10,14 @@
 </head>
 <body style="padding-top: 70px;">
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="height:70px;">
-    <div class="container-fluid">
-      <a class="navbar-brand position-relative" href="#">
-        <img src="logo.png" alt="BasuraTrack Logo" class="logo">
-      </a>
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="height:70px;">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="logo.png" alt="BasuraTrack Logo" style="height:40px; width:auto;">
+    </a>
+
+
       <ul class="navbar-nav ms-auto align-items-center">
         <li class="nav-item me-3">
           <a class="nav-link" href="notification.html"><i class="bi bi-bell-fill"></i></a>
@@ -38,20 +40,21 @@
   </nav>
 
   <!-- Sidebar -->
-  <div class="sidebar">
-    <nav class="nav flex-column">
-      <a class="nav-link" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i>Dashboard</a>
-      <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i>Routes & Schedules</a>
-      <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i>Trucks & Collectors</a>
-      <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i>Collection Records</a>
-      <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i>Resident Reports</a>
-      <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i>Analytics & Reports</a>
-      <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i>Announcements</a>
-      <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i>News & Articles</a>
-      <a class="nav-link active" href="user.html"><i class="bi bi-people-fill me-2"></i>User Management</a>
-      <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i>Settings</a>
-    </nav>
-  </div>
+ <div class="sidebar">
+  <nav class="nav flex-column">
+    <a class="nav-link" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
+    <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i> Routes & Schedules</a>
+    <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i> Trucks & Collectors</a>
+    <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i> Collection Records</a>
+    <a class="nav-link " href="special.html"><i class="bi bi-exclamation-circle-fill me-2"></i> Special Pickup</a>
+    <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i> Resident Reports</a>
+    <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Analytics & Reports</a>
+    <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i> Announcements</a>
+    <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
+    <a class="nav-link active" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
+    <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i> Settings</a>
+  </nav>
+</div>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -62,10 +65,11 @@
           <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="bi bi-person-plus-fill me-1"></i>Add User</button>
         </div>
 
-        <div class="note mb-3">
-          <strong>Note:</strong> Resident accounts are <span class="text-success fw-semibold">view-only</span>. 
-          Admins can add <span class="text-success fw-semibold">Collector</span> and <span class="text-success fw-semibold">Admin</span> accounts.
-        </div>
+      <div class="note mb-3">
+  <strong>Note:</strong> All accounts, including Residents, can now be <span class="text-danger fw-semibold">deactivated</span>. 
+  Admins can add <span class="text-success fw-semibold">Collector</span> and <span class="text-success fw-semibold">Admin</span> accounts.
+</div>
+
 
         <div class="d-flex justify-content-end mb-3">
           <label for="roleFilter" class="me-2 fw-semibold">Role Filter:</label>
@@ -107,7 +111,9 @@
                 <td>Maria Reyes</td>
                 <td>Resident</td>
                 <td><span class="badge bg-success">Active</span></td>
-                <td><button class="btn btn-sm btn-outline-secondary" disabled>View Only</button></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-danger deactivateBtn">Deactivate</button>
+                </td>
               </tr>
               <tr>
                 <td>A001</td>
@@ -213,112 +219,109 @@
   <!-- JS Section -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const userTable = document.getElementById('userTable');
-    let editRow = null;
+document.addEventListener("DOMContentLoaded", () => {
+  let editingRow = null;
+  const table = document.getElementById("userTable");
+  const roleFilter = document.getElementById("roleFilter");
 
-    // Role Filter
-    document.getElementById('roleFilter').addEventListener('change', function() {
-      const selectedRole = this.value;
-      const rows = userTable.querySelectorAll('tr');
-      rows.forEach(row => {
-        const role = row.children[3].textContent.trim();
-        row.style.display = (selectedRole === 'All' || role === selectedRole) ? '' : 'none';
-      });
-    });
+  // Add User Modal
+  const addUserModalEl = document.getElementById("addUserModal");
+  const addUserModal = new bootstrap.Modal(addUserModalEl);
 
-    // Add User
-    document.getElementById('addUserForm').addEventListener('submit', (e) => {
-      e.preventDefault();
+  // Add User
+  document.getElementById("addUserForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("addEmail").value.trim();
+    const name = document.getElementById("addName").value.trim();
+    const role = document.getElementById("addRole").value;
+    const status = document.getElementById("addStatus").value;
+    const idPrefix = role === "Collector" ? "C" : role === "Admin" ? "A" : "R";
+    const id = idPrefix + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
 
-      const email = document.getElementById('addEmail').value.trim();
-      const password = document.getElementById('addPassword').value.trim();
-      const name = document.getElementById('addName').value.trim();
-      const role = document.getElementById('addRole').value;
-      const status = document.getElementById('addStatus').value;
+    const row = table.insertRow();
+    row.innerHTML = `
+      <td>${id}</td>
+      <td>${email}</td>
+      <td>${name}</td>
+      <td>${role}</td>
+      <td><span class="badge ${status === "Active" ? "bg-success" : "bg-secondary"}">${status}</span></td>
+      <td>
+        ${role !== "Resident" ? `<button class="btn btn-sm btn-outline-success editBtn" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</button>` : ""}
+        <button class="btn btn-sm ${status === "Active" ? "btn-outline-danger" : "btn-outline-success"} deactivateBtn">${status === "Active" ? "Deactivate" : "Activate"}</button>
+      </td>
+    `;
+    e.target.reset();
+    addUserModal.hide();
+  });
 
-      if (!email || !password || !name || !role || !status) return;
+  // Edit User
+  const editUserModalEl = document.getElementById("editUserModal");
+  const editUserModal = new bootstrap.Modal(editUserModalEl);
 
-      const userId = (role === 'Collector' ? 'C' : 'A') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-      const badgeClass = status === 'Active' ? 'bg-success' : 'bg-secondary';
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td>${userId}</td>
-        <td>${email}</td>
-        <td>${name}</td>
-        <td>${role}</td>
-        <td><span class="badge ${badgeClass}">${status}</span></td>
-        <td>
-          <button class="btn btn-sm btn-outline-success editBtn" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</button>
-          <button class="btn btn-sm ${status === 'Active' ? 'btn-outline-danger' : 'btn-outline-success'} deactivateBtn">${status === 'Active' ? 'Deactivate' : 'Activate'}</button>
-        </td>
-      `;
-      userTable.appendChild(newRow);
-      attachActionButtons();
-
-      document.getElementById('addUserForm').reset();
-      bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
-    });
-
-    // Attach Edit and Deactivate Actions
-    function attachActionButtons() {
-      document.querySelectorAll('.editBtn').forEach(btn => {
-        btn.onclick = () => {
-          editRow = btn.closest('tr');
-          document.getElementById('editEmail').value = editRow.children[1].textContent.trim();
-          document.getElementById('editName').value = editRow.children[2].textContent.trim();
-          document.getElementById('editRole').value = editRow.children[3].textContent.trim();
-          document.getElementById('editStatus').value = editRow.children[4].textContent.trim();
-        };
-      });
-
-      document.querySelectorAll('.deactivateBtn').forEach(btn => {
-        btn.onclick = () => {
-          const row = btn.closest('tr');
-          const badge = row.querySelector('.badge');
-          if (badge.textContent === 'Active') {
-            badge.textContent = 'Inactive';
-            badge.classList.replace('bg-success', 'bg-secondary');
-            btn.textContent = 'Activate';
-            btn.classList.replace('btn-outline-danger', 'btn-outline-success');
-          } else {
-            badge.textContent = 'Active';
-            badge.classList.replace('bg-secondary', 'bg-success');
-            btn.textContent = 'Deactivate';
-            btn.classList.replace('btn-outline-success', 'btn-outline-danger');
-          }
-        };
-      });
+  document.getElementById("userTable").addEventListener("click", e => {
+    const row = e.target.closest("tr");
+    
+    // Edit
+    if (e.target.closest(".editBtn")) {
+      editingRow = row;
+      document.getElementById("editEmail").value = row.children[1].textContent;
+      document.getElementById("editName").value = row.children[2].textContent;
+      document.getElementById("editRole").value = row.children[3].textContent;
+      document.getElementById("editStatus").value = row.children[4].textContent;
+      editUserModal.show();
     }
 
-    // Edit User Functionality
-    document.getElementById('editUserForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!editRow) return;
-
-      editRow.children[1].textContent = document.getElementById('editEmail').value.trim();
-      editRow.children[2].textContent = document.getElementById('editName').value.trim();
-      editRow.children[3].textContent = document.getElementById('editRole').value;
-      const status = document.getElementById('editStatus').value;
-      const badge = editRow.querySelector('.badge');
-      badge.textContent = status;
-      badge.className = `badge ${status === 'Active' ? 'bg-success' : 'bg-secondary'}`;
-      const deactivateBtn = editRow.querySelector('.deactivateBtn');
-      deactivateBtn.textContent = status === 'Active' ? 'Deactivate' : 'Activate';
-      deactivateBtn.className = `btn btn-sm ${status === 'Active' ? 'btn-outline-danger' : 'btn-outline-success'} deactivateBtn`;
-
-      attachActionButtons();
-      bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
-    });
-
-    attachActionButtons();
-
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm("Are you sure you want to log out?")) {
-        window.location.href = "index.html";
+    // Deactivate/Activate
+    if (e.target.closest(".deactivateBtn")) {
+      const statusCell = row.children[4].querySelector("span");
+      const btn = e.target.closest(".deactivateBtn");
+      if (statusCell.textContent === "Active") {
+        statusCell.textContent = "Inactive";
+        statusCell.classList.remove("bg-success");
+        statusCell.classList.add("bg-secondary");
+        btn.textContent = "Activate";
+        btn.classList.remove("btn-outline-danger");
+        btn.classList.add("btn-outline-success");
+      } else {
+        statusCell.textContent = "Active";
+        statusCell.classList.remove("bg-secondary");
+        statusCell.classList.add("bg-success");
+        btn.textContent = "Deactivate";
+        btn.classList.remove("btn-outline-success");
+        btn.classList.add("btn-outline-danger");
       }
+    }
+  });
+
+  // Save Edit User
+  document.getElementById("editUserForm").addEventListener("submit", e => {
+    e.preventDefault();
+    if(editingRow){
+      editingRow.children[1].textContent = document.getElementById("editEmail").value.trim();
+      editingRow.children[2].textContent = document.getElementById("editName").value.trim();
+      editingRow.children[3].textContent = document.getElementById("editRole").value;
+      editingRow.children[4].querySelector("span").textContent = document.getElementById("editStatus").value;
+      editingRow = null;
+      editUserModal.hide();
+    }
+  });
+
+  // Role Filter
+  roleFilter.addEventListener("change", () => {
+    const role = roleFilter.value;
+    [...table.rows].forEach(r => {
+      if(role === "All" || r.children[3].textContent === role) r.style.display = "";
+      else r.style.display = "none";
     });
+  });
+
+  // Logout
+  document.getElementById("logoutBtn").addEventListener("click", e => {
+    e.preventDefault();
+    if(confirm("Are you sure you want to logout?")) window.location.href = "index.html";
+  });
+
+});
   </script>
 </body>
 </html>

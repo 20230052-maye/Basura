@@ -1,0 +1,108 @@
+/* Table Styling */
+#requestsTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Header row */
+#requestsTable thead tr {
+  background-color: #a5d6a7; /* light green header row */
+  color: #1b4332;            /* dark green text */
+  font-weight: 600;
+}
+
+/* Table body rows */
+#requestsTable tbody tr {
+  background-color: #f1f8f2;  /* light green rows */
+}
+
+/* Table body rows hover */
+#requestsTable tbody tr:hover {
+  background-color: #d0edc5;  /* brighter green on hover */
+}
+
+/* Table cells */
+#requestsTable td, #requestsTable th {
+  vertical-align: middle;
+  padding: 10px;
+}
+
+
+/* ================= Status Badges ================= */
+.badge-status {
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.badge-status.pending {
+  background-color: #ffecb3 !important; /* light yellow */
+  color: #795548 !important; /* brown text */
+}
+
+.badge-status.approved {
+  background-color: #90caf9 !important; /* light blue */
+  color: #0d47a1 !important; /* dark blue text */
+}
+
+.badge-status.scheduled {
+  background-color: #80deea !important; /* light cyan */
+  color: #006064 !important; /* dark cyan text */
+}
+
+.badge-status.completed {
+  background-color: #c8e6c9 !important; /* light green */
+  color: #2e7d32 !important; /* dark green text */
+}
+
+.badge-status.rejected {
+  background-color: #ffcdd2 !important; /* light red */
+  color: #c62828 !important; /* dark red text */
+}
+
+/* Optional: Add striped effect for better readability */
+#requestsTable tbody tr:nth-child(even) {
+  background-color: #e8f5e9; /* slightly different green for even rows */
+}
+
+/* ================= Buttons ================= */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2e7d32;
+  color: white;
+  border-color: #2e7d32;
+}
+
+.btn-outline-danger:hover {
+  background-color: #c62828;
+  color: white;
+}
+
+/* ================= Modal ================= */
+.modal-content {
+  border-radius: 14px;
+}
+
+.modal-header {
+  background-color: #2e7d32;
+  color: white;
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+}
+
+.modal-label {
+  font-weight: 600;
+}

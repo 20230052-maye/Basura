@@ -5,67 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BasuraTrack Sariaya - Admin Dashboard</title>
 
-  <!-- Bootstrap CSS -->
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
-
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link rel="stylesheet" href="style.css">
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl@4.1.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@4.1.0/dist/maplibre-gl.js"></script>
 
-  <!-- Top Navbar -->
- <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="height:70px;">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="height:70px;">
   <div class="container-fluid">
-    <a class="navbar-brand position-relative" href="#">
-      <img src="logo.png" alt="BasuraTrack Logo" class="logo">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="logo.png" alt="BasuraTrack Logo" style="height:40px;">
     </a>
-     <ul class="navbar-nav ms-auto align-items-center">
-     <li class="nav-item me-3">
-  <a class="nav-link" href="notification.html"><i class="bi bi-bell-fill"></i></a>
-</li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
-            <i class="bi bi-person-circle"></i> Admin
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-  <li><hr class="dropdown-divider"></li>
-  <li>
-    <a class="dropdown-item text-center" href="index.html">
-      Logout <i class="bi bi-box-arrow-right me-1"></i>
-    </a>
-  </li>
-</ul>
-
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <nav class="nav flex-column">
-      <a class="nav-link active" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
-      <a class="nav-link " href="schedule.html"><i class="bi bi-map-fill me-2"></i> Routes & Schedules</a>
-      <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i> Trucks & Collectors</a>
-      <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i> Collection Records</a>
-      <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i> Resident Reports</a>
-      <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Analytics & Reports</a>
-      <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i> Announcements</a>
-        <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
-       <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
-        <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i> Settings</a>
-    </nav>
+    <ul class="navbar-nav ms-auto align-items-center">
+      <li class="nav-item me-3">
+        <a class="nav-link" href="notification.html"><i class="bi bi-bell-fill"></i></a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle"></i> Admin
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item text-center" href="index.html" id="logoutBtn">
+              Logout <i class="bi bi-box-arrow-right me-1"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
+</nav>
 
+<!-- Sidebar -->
+<div class="sidebar">
+  <nav class="nav flex-column">
+    <a class="nav-link active" href="dashboard.html"><i class="bi bi-house-door-fill me-2"></i> Dashboard</a>
+    <a class="nav-link" href="schedule.html"><i class="bi bi-map-fill me-2"></i> Routes & Schedules</a>
+    <a class="nav-link" href="trucks.html"><i class="bi bi-truck-front-fill me-2"></i> Trucks & Collectors</a>
+    <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i> Collection Records</a>
+    <a class="nav-link" href="special.html"><i class="bi bi-exclamation-circle-fill me-2"></i> Special Pickup</a>
+    <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i> Resident Reports</a>
+    <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Analytics & Reports</a>
+    <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i> Announcements</a>
+    <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
+    <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
+    <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill me-2"></i> Settings</a>
+  </nav>
+</div>
 
-  <!-- Main Content -->
-  <div class="main-content p-4">
+<!-- Main -->
+<div class="main-content p-4">
   <div class="card p-4 shadow-sm mt-2">
-     <h4 class="fw-semibold text-dark"><i class="bi bi-speedometer2 me-2 text-success"></i>Dashboard Overview</h4>
+    <h4 class="fw-semibold text-dark"><i class="bi bi-speedometer2 me-2 text-success"></i>Dashboard Overview</h4>
 
     <!-- Overview Cards -->
     <div class="row g-3">
@@ -78,7 +78,7 @@
       <div class="col-md-4">
         <div class="dashboard-card">
           <h6><i class="bi bi-truck-front-fill me-2 text-primary"></i>Active Trucks</h6>
-          <h3 class="mt-2 text-primary">8 <small class="text-muted">Active</small></h3>
+          <h3 class="mt-2 text-primary">7 <small class="text-muted">Active</small></h3>
         </div>
       </div>
       <div class="col-md-4">
@@ -89,96 +89,25 @@
       </div>
     </div>
 
-<!-- Collection Map -->
-<div class="mt-4">
-  <h5><i class="bi bi-map-fill me-2 text-success"></i>Collection Map (Barangays of Sariaya)</h5>
-  <div id="sariaya-map" style="height: 450px; border: 1px solid #ccc; border-radius: 8px;"></div>
-  <ul class="mt-2 small text-muted">
-    <li>Markers for trucks in <span class="text-danger">real-time</span></li>
-    <li>Color zones for routes (Poblacion, Guisguis, etc.)</li>
-    <li>Hover to show truck name and current status</li>
-  </ul>
+    <!-- Truck Capacity Section -->
+    <div class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5><i class="bi bi-truck-front-fill me-2 text-primary"></i>Truck Capacities</h5>
+        <div>
+          <button id="listViewBtn" class="btn btn-outline-primary btn-sm me-1 active">List View</button>
+          <button id="mapViewBtn" class="btn btn-outline-primary btn-sm">Map View</button>
+        </div>
+      </div>
+
+      <!-- List View -->
+      <div class="row d-flex flex-wrap" id="truckCards"></div>
+
+     <!-- Map View -->
+<div id="truckMapContainer" style="height:480px; border-radius:10px; display:none;"></div>
+<div class="mt-2 small text-muted">
+  🔵 Blue dot = your location | 🚛 = trucks
 </div>
-
-<!-- Leaflet CSS & JS -->
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-  // Initialize the map centered on Sariaya
-  var map = L.map('sariaya-map').setView([13.9897, 121.4761], 13);
-
-  // Add OpenStreetMap tiles
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  // Example truck markers (replace with your real-time data later)
-  var trucks = [
-    {name: "Truck 01", status: "Collecting", coords: [13.990, 121.478]},
-    {name: "Truck 02", status: "Idle", coords: [13.987, 121.474]},
-    {name: "Truck 03", status: "Returning", coords: [13.985, 121.479]}
-  ];
-
-  trucks.forEach(function(truck) {
-    L.marker(truck.coords)
-      .addTo(map)
-      .bindPopup(`<b>${truck.name}</b><br>Status: ${truck.status}`);
-  });
-
-  // Example route zones with colors
-  var zones = [
-    {
-      name: "Poblacion",
-      color: "green",
-      coords: [
-        [13.992, 121.473],
-        [13.991, 121.479],
-        [13.986, 121.478],
-        [13.987, 121.473]
-      ]
-    },
-    {
-      name: "Guisguis",
-      color: "blue",
-      coords: [
-        [13.994, 121.480],
-        [13.993, 121.485],
-        [13.989, 121.484],
-        [13.990, 121.480]
-      ]
-    },
-    {
-      name: "San Juan",
-      color: "orange",
-      coords: [
-        [13.983, 121.477],
-        [13.982, 121.482],
-        [13.978, 121.481],
-        [13.979, 121.476]
-      ]
-    }
-  ];
-
-  zones.forEach(function(zone) {
-    L.polygon(zone.coords, {
-      color: zone.color,
-      fillOpacity: 0.2
-    }).addTo(map)
-      .bindPopup(zone.name + " Route Zone");
-  });
-
-  // Optional: zoom to fit all markers & zones
-  var allLayers = trucks.map(t => L.latLng(t.coords)).concat(
-    zones.flatMap(z => z.coords.map(c => L.latLng(c)))
-  );
-  var group = L.featureGroup(allLayers.map(L.marker));
-  map.fitBounds(group.getBounds().pad(0.1));
-</script>
+    </div>
 
     <!-- Recent Reports -->
     <div class="mt-4">
@@ -221,47 +150,200 @@
       </div>
     </div>
 
-    <!-- Waste Collection Trends -->
+    <!-- Chart -->
     <div class="mt-4">
       <h5><i class="bi bi-bar-chart-fill me-2 text-success"></i>Waste Collection Trends</h5>
       <canvas id="wasteChart" height="120"></canvas>
     </div>
   </div>
+</div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Chart.js Script -->
-  <script>
-    const ctx = document.getElementById('wasteChart');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Poblacion', 'Sampaloc', 'Guisguis', 'Sto. Cristo', 'Talaan'],
-        datasets: [{
-          label: 'Total Waste (tons)',
-          data: [2.4, 1.8, 1.2, 0.9, 0.7],
-          backgroundColor: '#1e5631'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, title: { display: true, text: 'Tons Collected' } },
-          x: { title: { display: true, text: 'Barangay' } }
-        }
-      }
-    });
-      const logoutBtn = document.getElementById('logoutBtn');
+<script>
+/* ----------------- TRUCK DATA ----------------- */
+const trucks = [
+  { id:"Truck 01", collector:"Juan Dela Cruz", capacity:55,
+    route:[[121.4785,13.9905],[121.4795,13.9912],[121.4810,13.9901]], barangay:"Poblacion", lastUpdated:"12:34 PM" },
+  { id:"Truck 02", collector:"Maria Santos", capacity:78,
+    route:[[121.4742,13.9871],[121.4728,13.9865],[121.4715,13.9882]], barangay:"Sampaloc", lastUpdated:"12:20 PM" },
+  { id:"Truck 03", collector:"Pedro Reyes", capacity:92,
+    route:[[121.4791,13.9852],[121.4813,13.9841],[121.4820,13.9860]], barangay:"Guisguis", lastUpdated:"11:50 AM" },
+  { id:"Truck 04", collector:"Miguel De Torre", capacity:45,
+    route:[[121.4795,13.9885],[121.4805,13.9880],[121.4815,13.9890]], barangay:"Sto. Cristo", lastUpdated:"12:10 PM" },
+  { id:"Truck 05", collector:"Luis Garcia", capacity:88,
+    route:[[121.4765,13.9920],[121.4775,13.9915],[121.4785,13.9925]], barangay:"Talaan", lastUpdated:"11:45 AM" },
+  { id:"Truck 06", collector:"Sofia Reyes", capacity:60,
+    route:[[121.4745,13.9840],[121.4755,13.9835],[121.4765,13.9845]], barangay:"Concepcion Banahaw", lastUpdated:"12:05 PM" },
+  { id:"Truck 07", collector:"Marco Santos", capacity:72,
+    route:[[121.4780,13.9865],[121.4790,13.9860],[121.4800,13.9870]], barangay:"Mamala 1", lastUpdated:"11:30 AM" }
+];
+/* ------------- RENDER TRUCK CARDS (LIST VIEW) ------------- */
+function renderTruckCards() {
+  const container = document.getElementById('truckCards');
+  container.innerHTML = "";
 
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default link action
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      window.location.href = "index.html"; // Redirect to login
-    }
+  // Flex container to center trucks in rows
+  const flexContainer = document.createElement('div');
+  flexContainer.className = "d-flex flex-wrap justify-content-center mb-3";
+  container.appendChild(flexContainer);
+
+  // Render each truck
+  trucks.forEach(truck => {
+    let colorClass, statusText;
+    if (truck.capacity <= 60) { colorClass = "bg-success-fill"; statusText = "Normal"; }
+    else if (truck.capacity <= 85) { colorClass = "bg-warning-fill"; statusText = "Near Full"; }
+    else { colorClass = "bg-danger-fill"; statusText = "Full"; }
+
+    const truckCard = document.createElement('div');
+    truckCard.className = "d-flex flex-column align-items-center m-2";
+    truckCard.innerHTML = `
+      <div class="truck-card shadow-sm" style="width:120px;">
+        <h6><b>${truck.collector}</b> (${truck.id})</h6>
+        <div class="garbage-bin">
+          <div class="garbage-fill ${colorClass}" style="height:${truck.capacity}%">
+            ${truck.capacity}%
+          </div>
+        </div>
+        <span class="badge ${colorClass} mt-1">${statusText}</span><br>
+        <small class="text-muted">Last Updated: ${truck.lastUpdated}</small>
+      </div>
+    `;
+    flexContainer.appendChild(truckCard);
   });
-  </script>
+}
+/* ------------- TOGGLE LIST / MAP VIEW ------------- */
+const listViewBtn = document.getElementById('listViewBtn');
+const mapViewBtn = document.getElementById('mapViewBtn');
+const truckCardsContainer = document.getElementById('truckCards');
+const truckMapContainer = document.getElementById('truckMapContainer');
+
+function showListView() {
+  truckCardsContainer.style.display = 'block'; // show list
+  truckMapContainer.style.display = 'none';    // hide map
+  listViewBtn.classList.add('active');
+  mapViewBtn.classList.remove('active');
+}
+
+/* ----------------- MAP & SMOOTH TRUCK ANIMATION ----------------- */
+function showMapView() {
+  truckCardsContainer.style.display = 'none';  // hide list
+  truckMapContainer.style.display = 'block';   // show map
+  mapViewBtn.classList.add('active');
+  listViewBtn.classList.remove('active');
+
+  if (!window.truckMap) {
+    // Initialize Map
+    window.truckMap = new maplibregl.Map({
+      container: 'truckMapContainer',
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: 'raster',
+            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tileSize: 256
+          }
+        },
+        layers: [{ id: 'osm-layer', type: 'raster', source: 'osm' }]
+      },
+      center: [121.4761, 13.9897],
+      zoom: 14
+    });
+    window.truckMap.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+
+    // Initialize trucks
+    trucks.forEach(truck => {
+      const el = document.createElement('div');
+      el.innerHTML = "🚛";
+      el.style.fontSize = "24px";
+
+      let statusText;
+      if (truck.capacity <= 60) statusText = "Normal";
+      else if (truck.capacity <= 85) statusText = "Near Full";
+      else statusText = "Full";
+
+      const popup = new maplibregl.Popup({ offset: 25 }).setHTML(
+        `<b>${truck.id}</b><br>
+         Barangay: ${truck.barangay}<br>
+         Capacity: ${truck.capacity}%<br>
+         Status: <span style="color:${statusText==='Normal'?'green':statusText==='Near Full'?'orange':'red'}">${statusText}</span>`
+      );
+
+      truck.marker = new maplibregl.Marker(el)
+                       .setLngLat(truck.route[0])
+                       .setPopup(popup)
+                       .addTo(window.truckMap);
+
+      // Animation properties
+      truck.currentStep = 0;
+      truck.nextStep = 1;
+      truck.progress = 0;
+      truck.speed = 0.005; // adjust speed: smaller = slower
+    });
+
+    // Smooth animation function
+    function animateTrucks() {
+      trucks.forEach(truck => {
+        let start = truck.route[truck.currentStep];
+        let end = truck.route[truck.nextStep];
+
+        // Linear interpolation between points
+        let lng = start[0] + (end[0]-start[0]) * truck.progress;
+        let lat = start[1] + (end[1]-start[1]) * truck.progress;
+        truck.marker.setLngLat([lng, lat]);
+
+        truck.progress += truck.speed;
+
+        if(truck.progress >= 1){
+          truck.currentStep = truck.nextStep;
+          truck.nextStep = (truck.nextStep + 1) % truck.route.length;
+          truck.progress = 0;
+        }
+      });
+
+      requestAnimationFrame(animateTrucks);
+    }
+
+    // Start the animation
+    animateTrucks();
+  }
+}
+
+// Event listeners
+listViewBtn.addEventListener('click', showListView);
+mapViewBtn.addEventListener('click', showMapView);
+
+// Default to list view
+showListView();
+
+// Render truck cards
+renderTruckCards();
+
+
+/* ---------------- CHART ---------------- */
+const ctx=document.getElementById('wasteChart');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['Poblacion','Sampaloc','Guisguis','Sto. Cristo','Talaan'],
+    datasets:[{label:'Total Waste (tons)',data:[2.4,1.8,1.2,0.9,0.7],backgroundColor:'#1e5631'}]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      y:{beginAtZero:true,title:{display:true,text:'Tons Collected'}},
+      x:{title:{display:true,text:'Barangay'}}
+    }
+  }
+});
+
+/* ---------------- LOGOUT ---------------- */
+document.getElementById('logoutBtn').addEventListener('click',e=>{
+  e.preventDefault();
+  if(confirm("Are you sure you want to log out?")) window.location.href="index.html";
+});
+</script>
 </body>
 </html>
