@@ -223,31 +223,64 @@
     document.getElementById('nextWeek').addEventListener('click', () => { currentWeekStart.setDate(currentWeekStart.getDate()+7); updateWeekRange(); });
     updateWeekRange();
 
-    // ---------- DONUT CHART ----------
-    const pieCtx = document.getElementById("pieChart");
-    const pieChart = new Chart(pieCtx, {
-      type:'doughnut',
-      data:{ labels:["Resolved","Pending"], datasets:[{ data:[80,20], backgroundColor:["#43a047","#c62828"] }] },
-      options:{ responsive:true, plugins:{ legend:{ position:"bottom" } } },
-      plugins:[{
-        id:'centerText',
-        beforeDraw(chart){
-          const ctx=chart.ctx;
-          const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
-          const resolved = chart.data.datasets[0].data[0];
-          const percent=Math.round((resolved/total)*100);
-          ctx.save();
-          const width=chart.width,height=chart.height;
-          ctx.font='bold 18px Arial';
-          ctx.textAlign='center';
-          ctx.textBaseline='middle';
-          ctx.fillStyle='#43a047';
-          ctx.fillText(percent+'%',width/2,height/2);
-          ctx.restore();
+    // -// ---------- DONUT CHART ----------
+const pieCtx = document.getElementById("pieChart");
+
+const pieChart = new Chart(pieCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ["Resolved", "Pending"],
+    datasets: [{
+      data: [80, 20],
+      backgroundColor: ["#43a047", "#c62828"]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom"
+      },
+      tooltip: {
+        padding: 14,
+        titleFont: {
+          size: 16,
+          weight: 'bold'
+        },
+        bodyFont: {
+          size: 15
+        },
+        callbacks: {
+          label: function (context) {
+            return context.parsed + "%";
+          }
         }
-      }]
-    });
-    document.getElementById('resolutionMonth').addEventListener('change', e => { console.log("Resolution Month:", e.target.value); });
+      }
+    }
+  },
+  plugins: [{
+    id: 'centerText',
+    beforeDraw(chart) {
+      const ctx = chart.ctx;
+      const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+      const resolved = chart.data.datasets[0].data[0];
+      const percent = Math.round((resolved / total) * 100);
+
+      ctx.save();
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#43a047';
+      ctx.fillText(percent + '%', chart.width / 2, chart.height / 2);
+      ctx.restore();
+    }
+  }]
+});
+
+document.getElementById('resolutionMonth')
+  .addEventListener('change', e => {
+    console.log("Resolution Month:", e.target.value);
+  });
 
     // ---------- ROUTE EFFICIENCY ----------
     const routeCtx = document.getElementById("routeChart");
