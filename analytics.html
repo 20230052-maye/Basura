@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BasuraTrack Sariaya - Analytics & Reports</title>
+  <title>EnviroManage - Analytics & Reports</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -173,129 +173,330 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Add jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- jsPDF AutoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
   <script>
-    // Initialize Bootstrap tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+     // ---------- TOOLTIP ----------
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
 
-    // ---------- LOGOUT ----------
-    const logoutBtn = document.getElementById('logoutBtn');
-    logoutBtn.addEventListener('click', e => {
-      e.preventDefault();
-      if(confirm("Are you sure you want to log out?")) window.location.href = "index.html";
-    });
+  // ---------- LOGOUT ----------
+  document.getElementById('logoutBtn').addEventListener('click', e => {
+    e.preventDefault();
+    if (confirm("Are you sure you want to log out?")) location.href = "index.html";
+  });
 
-    // ---------- BAR CHART ----------
-    const barCtx = document.getElementById("barChart");
-    const barChart = new Chart(barCtx, {
-      type: "bar",
-      data: {
-        labels: ["Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5"],
-        datasets: [{ label: "Waste Collected (kg)", data: [1200, 950, 1340, 1100, 900], backgroundColor: "#66bb6a" }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, title: { display: true, text: "Kilograms" } },
-          x: { title: { display: true, text: "Barangay" } }
-        }
+  /* =====================================================
+     DATA STORAGE (3 sets each: date / week / month)
+  ===================================================== */
+
+  // BAR CHART DATA (by date)
+  const barDataByDate = {
+    "2026-02-01": [1200, 950, 1340, 1100, 900],
+    "2026-02-02": [1000, 880, 1200, 980, 760],
+    "2026-02-03": [1400, 1100, 1500, 1250, 1020]
+  };
+
+  // LINE CHART DATA (by week index)
+  const weeklyLineData = [
+    [200, 250, 230, 280, 260, 300, 320],
+    [180, 220, 210, 260, 240, 280, 300],
+    [260, 300, 290, 330, 310, 360, 380]
+  ];
+
+  // PIE CHART DATA (by month)
+  const resolutionData = {
+    Jan: [75, 25],
+    Feb: [82, 18],
+    Mar: [90, 10]
+  };
+
+  // ROUTE CHART DATA (by date)
+  const routeDataByDate = {
+    "2026-02-01": [7.8, 8.5, 9, 7.5, 8],
+    "2026-02-02": [8, 8.2, 8.6, 7.9, 8.1],
+    "2026-02-03": [9, 9.1, 9.4, 8.8, 9]
+  };
+
+  /* =====================================================
+     BAR CHART
+  ===================================================== */
+  const barCtx = document.getElementById("barChart");
+  const barChart = new Chart(barCtx, {
+    type: "bar",
+    data: {
+      labels: ["Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5"],
+      datasets: [{
+        label: "Waste Collected (kg)",
+        data: barDataByDate["2026-02-01"],
+        backgroundColor: "#66bb6a"
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: "Kilograms" } },
+        x: { title: { display: true, text: "Barangay" } }
       }
-    });
-    document.getElementById("barChartDate").value = new Date().toISOString().split('T')[0];
-
-    // ---------- LINE CHART ----------
-    const lineCtx = document.getElementById("lineChart");
-    const lineChart = new Chart(lineCtx, {
-      type: "line",
-      data: { labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], datasets:[{ label:"Collected Waste (kg)", data:[200,250,230,280,260,300,320], borderColor:"#2e7d32", backgroundColor:"rgba(46,125,50,0.1)", fill:true, tension:0.3 }] },
-      options: { responsive:true, plugins:{ legend:{ position:"top" } }, scales:{ y:{ beginAtZero:true }, x:{ title:{ display:true, text:"Day of Week" } } } }
-    });
-    let currentWeekStart = new Date(); currentWeekStart.setDate(currentWeekStart.getDate()-currentWeekStart.getDay());
-    function updateWeekRange() {
-      const start = currentWeekStart.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-      const endDate = new Date(currentWeekStart); endDate.setDate(currentWeekStart.getDate()+6);
-      const end = endDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-      document.getElementById('weekRange').value = `${start} - ${end}`;
     }
-    document.getElementById('prevWeek').addEventListener('click', () => { currentWeekStart.setDate(currentWeekStart.getDate()-7); updateWeekRange(); });
-    document.getElementById('nextWeek').addEventListener('click', () => { currentWeekStart.setDate(currentWeekStart.getDate()+7); updateWeekRange(); });
+  });
+
+  document.getElementById("barChartDate").value = "2026-02-01";
+  document.getElementById("barChartDate").addEventListener("change", e => {
+    barChart.data.datasets[0].data = barDataByDate[e.target.value] || barDataByDate["2026-02-01"];
+    barChart.update();
+  });
+
+  /* =====================================================
+     LINE CHART (WEEK NAVIGATION)
+  ===================================================== */
+  let weekIndex = 0;
+
+  const lineCtx = document.getElementById("lineChart");
+  const lineChart = new Chart(lineCtx, {
+    type: "line",
+    data: {
+      labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      datasets: [{
+        label: "Collected Waste (kg)",
+        data: weeklyLineData[weekIndex],
+        borderColor: "#2e7d32",
+        backgroundColor: "rgba(46,125,50,0.1)",
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: "top" } },
+      scales: { y: { beginAtZero: true }, x: { title: { display: true, text: "Day of Week" } } }
+    }
+  });
+
+  function updateWeekRange() {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - startDate.getDay() + weekIndex*7);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 6);
+    const startStr = startDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const endStr = endDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    document.getElementById('weekRange').value = `${startStr} - ${endStr}`;
+    lineChart.data.datasets[0].data = weeklyLineData[weekIndex];
+    lineChart.update();
+  }
+
+  document.getElementById('prevWeek').addEventListener('click', () => {
+    weekIndex = (weekIndex + 2) % 3; // cycle prev
     updateWeekRange();
+  });
 
-    // -// ---------- DONUT CHART ----------
-const pieCtx = document.getElementById("pieChart");
+  document.getElementById('nextWeek').addEventListener('click', () => {
+    weekIndex = (weekIndex + 1) % 3; // cycle next
+    updateWeekRange();
+  });
 
-const pieChart = new Chart(pieCtx, {
-  type: 'doughnut',
-  data: {
-    labels: ["Resolved", "Pending"],
-    datasets: [{
-      data: [80, 20],
-      backgroundColor: ["#43a047", "#c62828"]
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom"
-      },
-      tooltip: {
-        padding: 14,
-        titleFont: {
-          size: 16,
-          weight: 'bold'
-        },
-        bodyFont: {
-          size: 15
-        },
-        callbacks: {
-          label: function (context) {
-            return context.parsed + "%";
+  updateWeekRange();
+
+  /* =====================================================
+     DONUT CHART
+  ===================================================== */
+  const pieCtx = document.getElementById("pieChart");
+  const pieChart = new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ["Resolved", "Pending"],
+      datasets: [{
+        data: resolutionData.Jan,
+        backgroundColor: ["#43a047", "#c62828"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" },
+        tooltip: {
+          padding: 14,
+          titleFont: { size: 16, weight: 'bold' },
+          bodyFont: { size: 15 },
+          callbacks: {
+            label: function (context) { return context.parsed + "%"; }
           }
         }
       }
-    }
-  },
-  plugins: [{
-    id: 'centerText',
-    beforeDraw(chart) {
-      const ctx = chart.ctx;
-      const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-      const resolved = chart.data.datasets[0].data[0];
-      const percent = Math.round((resolved / total) * 100);
-
-      ctx.save();
-      ctx.font = 'bold 18px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#43a047';
-      ctx.fillText(percent + '%', chart.width / 2, chart.height / 2);
-      ctx.restore();
-    }
-  }]
-});
-
-document.getElementById('resolutionMonth')
-  .addEventListener('change', e => {
-    console.log("Resolution Month:", e.target.value);
+    },
+    plugins: [{
+      id: 'centerText',
+      beforeDraw(chart) {
+        const ctx = chart.ctx;
+        const total = chart.data.datasets[0].data.reduce((a, b) => a+b, 0);
+        const resolved = chart.data.datasets[0].data[0];
+        const percent = Math.round((resolved/total)*100);
+        ctx.save();
+        ctx.font = 'bold 18px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#43a047';
+        ctx.fillText(percent + '%', chart.width/2, chart.height/2);
+        ctx.restore();
+      }
+    }]
   });
 
-    // ---------- ROUTE EFFICIENCY ----------
-    const routeCtx = document.getElementById("routeChart");
-    const routeChart = new Chart(routeCtx, {
-      type:'bar',
-      data:{ labels:["Route A","Route B","Route C","Route D","Route E"], datasets:[{ label:"Planned Shift (hrs)", data:[8,8,8,8,8], backgroundColor:"#a5d6a7" },{ label:"Actual Duration (hrs)", data:[7.8,8.5,9,7.5,8], backgroundColor:"#66bb6a" }] },
-      options:{ responsive:true, plugins:{ legend:{ position:"top" } }, scales:{ y:{ beginAtZero:true, title:{ display:true, text:"Hours" } } } }
-    });
-    document.getElementById('routeDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('resolutionMonth').addEventListener('change', e => {
+    pieChart.data.datasets[0].data = resolutionData[e.target.value] || resolutionData.Jan;
+    pieChart.update();
+  });
 
-    // ---------- DOWNLOAD SIMULATION ----------
-    function downloadPDF(){alert("PDF Report downloaded successfully!");}
-    function downloadCSV(){alert("CSV Report downloaded successfully!");}
-    function showSummary(){alert("Monthly Summary:\n- Total Waste Collected: 5,890 kg\n- Average Resolution Rate: 82%\n- Most Active Barangay: Barangay 3");}
+  /* =====================================================
+     ROUTE CHART
+  ===================================================== */
+  const routeCtx = document.getElementById("routeChart");
+  const routeChart = new Chart(routeCtx, {
+    type:'bar',
+    data:{
+      labels:["Route A","Route B","Route C","Route D","Route E"],
+      datasets:[
+        { label:"Planned Shift (hrs)", data:[8,8,8,8,8], backgroundColor:"#a5d6a7" },
+        { label:"Actual Duration (hrs)", data:routeDataByDate["2026-02-01"], backgroundColor:"#66bb6a" }
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:"top" } }, scales:{ y:{ beginAtZero:true, title:{ display:true, text:"Hours" } } } }
+  });
 
+  document.getElementById('routeDate').value = "2026-02-01";
+  document.getElementById('routeDate').addEventListener('change', e => {
+    routeChart.data.datasets[1].data = routeDataByDate[e.target.value] || routeDataByDate["2026-02-01"];
+    routeChart.update();
+  });
+
+
+const { jsPDF } = window.jspdf;
+
+/* ---------------- CSV ---------------- */
+function downloadCSV() {
+  // Prepare CSV content
+  let csv = "";
+
+  // Bar Chart
+  const barDate = document.getElementById("barChartDate").value;
+  csv += `Waste Collected per Barangay, Date: ${barDate}\n`;
+  csv += "Barangay, Waste (kg)\n";
+  barChart.data.labels.forEach((label,i)=>{
+    csv += `${label}, ${barChart.data.datasets[0].data[i]}\n`;
+  });
+  csv += "\n";
+
+  // Line Chart
+  csv += `Weekly Collection Trends, ${document.getElementById('weekRange').value}\n`;
+  csv += "Day, Waste (kg)\n";
+  lineChart.data.labels.forEach((day,i)=>{
+    csv += `${day}, ${lineChart.data.datasets[0].data[i]}\n`;
+  });
+  csv += "\n";
+
+  // Route Chart
+  const routeDate = document.getElementById('routeDate').value;
+  csv += `Route Efficiency, Date: ${routeDate}\n`;
+  csv += "Route, Planned (hrs), Actual (hrs)\n";
+  routeChart.data.labels.forEach((label,i)=>{
+    csv += `${label}, ${routeChart.data.datasets[0].data[i]}, ${routeChart.data.datasets[1].data[i]}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "EnviroManage_Report.csv";
+  link.click();
+}
+
+/* ---------------- PDF ---------------- */
+function downloadPDF() {
+  const doc = new jsPDF();
+
+  let y = 10;
+  doc.setFontSize(16);
+  doc.text("EnviroManage Analytics Report", 105, y, {align: "center"});
+  y += 10;
+
+  // Bar Chart Table
+  doc.setFontSize(12);
+  const barDate = document.getElementById("barChartDate").value;
+  doc.text(`Waste Collected per Barangay (Date: ${barDate})`, 10, y);
+  y += 6;
+  doc.autoTable({
+    startY: y,
+    head: [["Barangay", "Waste (kg)"]],
+    body: barChart.data.labels.map((label,i)=>[label, barChart.data.datasets[0].data[i]]),
+    theme: 'grid',
+    headStyles: { fillColor: [102, 187, 106] },
+    styles: { fontSize: 10 }
+  });
+  y = doc.lastAutoTable.finalY + 10;
+
+  // Line Chart Table
+  doc.text(`Weekly Collection Trends (${document.getElementById('weekRange').value})`, 10, y);
+  y += 6;
+  doc.autoTable({
+    startY: y,
+    head: [["Day", "Waste (kg)"]],
+    body: lineChart.data.labels.map((day,i)=>[day, lineChart.data.datasets[0].data[i]]),
+    theme: 'grid',
+    headStyles: { fillColor: [46, 125, 50] },
+    styles: { fontSize: 10 }
+  });
+  y = doc.lastAutoTable.finalY + 10;
+
+  // Route Chart Table
+  const routeDate = document.getElementById('routeDate').value;
+  doc.text(`Route Efficiency (Date: ${routeDate})`, 10, y);
+  y += 6;
+  doc.autoTable({
+    startY: y,
+    head: [["Route", "Planned (hrs)", "Actual (hrs)"]],
+    body: routeChart.data.labels.map((label,i)=>[
+      label,
+      routeChart.data.datasets[0].data[i],
+      routeChart.data.datasets[1].data[i]
+    ]),
+    theme: 'grid',
+    headStyles: { fillColor: [102, 187, 106] },
+    styles: { fontSize: 10 }
+  });
+
+  doc.save("EnviroManage_Report.pdf");
+}
+
+/* ---------------- Monthly Summary ---------------- */
+function showSummary() {
+  // Total waste
+  let totalWaste = 0;
+  Object.values(barDataByDate).forEach(arr=>{
+    totalWaste += arr.reduce((a,b)=>a+b,0);
+  });
+
+  // Average resolution
+  const month = document.getElementById('resolutionMonth').value;
+  const resData = resolutionData[month] || [0,0];
+  const avgResolution = resData[0];
+
+  // Top Barangay
+  const totals = [0,0,0,0,0];
+  Object.values(barDataByDate).forEach(arr=>{
+    arr.forEach((val,i)=>totals[i]+=val);
+  });
+  const topIndex = totals.indexOf(Math.max(...totals));
+  const topBarangay = "Barangay " + (topIndex+1);
+
+  alert(`Monthly Summary (${month}):\n`+
+        ` - Total Waste Collected: ${totalWaste} kg\n`+
+        ` - Avg Resolution: ${avgResolution}%\n`+
+        ` - Top Barangay: ${topBarangay}`);
+}
   </script>
 </body>
 </html>
