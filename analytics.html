@@ -278,17 +278,21 @@
     }
   });
 
-  function updateWeekRange() {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - startDate.getDay() + weekIndex*7);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6);
-    const startStr = startDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-    const endStr = endDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-    document.getElementById('weekRange').value = `${startStr} - ${endStr}`;
-    lineChart.data.datasets[0].data = weeklyLineData[weekIndex];
-    lineChart.update();
-  }
+ function updateWeekRange() {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - startDate.getDay() + weekIndex*7);
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 6);
+
+  const startStr = startDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  const endStr = endDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  const year = endDate.getFullYear();
+
+  document.getElementById('weekRange').value = `${startStr} - ${endStr}, ${year}`;
+  lineChart.data.datasets[0].data = weeklyLineData[weekIndex];
+  lineChart.update();
+}
+
 
   document.getElementById('prevWeek').addEventListener('click', () => {
     weekIndex = (weekIndex + 2) % 3; // cycle prev
