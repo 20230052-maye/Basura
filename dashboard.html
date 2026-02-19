@@ -54,7 +54,7 @@
     <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i> Collection Records</a>
     <a class="nav-link" href="special.html"><i class="bi bi-exclamation-circle-fill me-2"></i> Special Pickup</a>
     <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i> Resident Reports</a>
-    <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Analytics & Reports</a>
+    <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i>Visual Analytics & Reports</a>
     <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i> Announcements</a>
     <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
     <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
@@ -150,109 +150,35 @@
       </div>
     </div>
 
-    <!-- Chart -->
-<div class="mt-4">
-  <div class="d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 d-flex align-items-center">
-      <i class="bi bi-bar-chart-fill me-2 text-success"></i>
-      Barangay Waste Heatmap
-      <i class="bi bi-info-circle text-secondary ms-2"
-         data-bs-toggle="tooltip"
-         data-bs-placement="top"
-         title="Shows the density of waste collection reports across the barangays.">
-      </i>
-    </h5>
 
+  <!-- Graphical Waste Report -->
+    <div class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 d-flex align-items-center">
+          <i class="bi bi-bar-chart-fill me-2 text-success"></i>
+          Barangay Waste Graph
+          <i class="bi bi-info-circle text-secondary ms-2"
+             data-bs-toggle="tooltip"
+             data-bs-placement="top"
+             title="Visualizes waste collected for all barangays. No barangay is left out."></i>
+        </h5>
 
-  <div class="input-group input-group-sm" style="width:220px;">
-    <button class="btn btn-outline-secondary" id="prevWeek">&lt;</button>
-    <input type="text" id="weekLabel" class="form-control text-center" readonly value="Jan 26 – Feb 1 2026">
-    <button class="btn btn-outline-secondary" id="nextWeek">&gt;</button>
-  </div>
-</div>
+        <div class="input-group input-group-sm" style="width:220px;">
+          <button class="btn btn-outline-secondary" id="prevWeek">&lt;</button>
+          <input type="text" id="weekLabel" class="form-control text-center" readonly value="Jan 26 – Feb 1 2026">
+          <button class="btn btn-outline-secondary" id="nextWeek">&gt;</button>
+        </div>
+      </div>
 
+      <canvas id="wasteGraph" height="200"></canvas>
 
-
-  </div>
-
-  <div class="heatmap-container mt-3">
-
-  <table class="heatmap-table">
-    <thead>
-      <tr>
-        <th>Barangay</th>
-        <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
-      </tr>
-    </thead>
-    <tbody id="heatmapBody"></tbody>
-  </table>
-<div class="d-flex justify-content-between align-items-start mt-3">
-  <!-- Left side: View All + Download -->
-  <div class="d-flex align-items-center">
-    <!-- View All Barangays -->
-    <button class="btn btn-sm btn-link text-success p-0 me-2" id="viewAllBtn">
-      View all barangays
-    </button>
-    <!-- Download CSV -->
-    <button class="btn btn-sm btn-outline-success" id="downloadHeatmapBtn">
-      <i class="bi bi-download me-1"></i> Download
-    </button>
-  </div>
-
-  <!-- Right side: Legend -->
-  <div class="heatmap-legend">
-    <span><i class="legend-box low"></i> Below Avg (&lt; 3 tons)</span>
-    <span><i class="legend-box mid"></i> Target (3–5 tons)</span>
-    <span><i class="legend-box high"></i> High (&gt; 5 tons)</span>
-    <span><i class="legend-box zero"></i> No Data</span>
-  </div>
-</div>
-
-
-<!-- Modal for all barangays -->
-<div class="modal fade" id="allBarangaysModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-<div class="modal-header d-flex justify-content-between align-items-center">
-  <!-- Title left -->
-  <h5 class="modal-title mb-0">All Barangays - Waste Heatmap</h5>
-  <!-- Right side: week navigation + close button -->
-  <div class="d-flex align-items-center">
-    <button class="btn btn-outline-secondary btn-sm me-1" id="modalPrevWeek">&lt;</button>
-    <input
-      type="text"
-      id="modalWeekLabel"
-      class="form-control form-control-sm text-center me-1"
-      readonly
-      style="width:160px;"
-    >
-    <button class="btn btn-outline-secondary btn-sm me-2" id="modalNextWeek">&gt;</button>
-    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-  </div>
-</div>
-
-     <div class="modal-body">
-  <table class="table table-bordered table-striped align-middle" id="modalHeatmapTable">
-    <thead>
-      <tr>
-        <th>Barangay</th>
-        <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <!-- LEGEND SA IBABA NG TABLE, RIGHT-ALIGNED -->
-  <div class="d-flex justify-content-end mt-3">
-    <div class="heatmap-legend">
-      <span><i class="legend-box low"></i> Below Avg (&lt; 3 tons)</span>
-      <span><i class="legend-box mid"></i> Target (3–5 tons)</span>
-      <span><i class="legend-box high"></i> High (&gt; 5 tons)</span>
-      <span><i class="legend-box zero"></i> No Data</span>
+      <div class="mt-2 d-flex justify-content-end">
+        <button class="btn btn-sm btn-outline-success" id="downloadHeatmapBtn">
+          <i class="bi bi-download me-1"></i> Download PDF
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
 </div>
 
 
@@ -261,6 +187,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script>
+   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 /* ----------------- TRUCK DATA ----------------- */
 const trucks = [
   { id:"Truck 01", collector:"Juan Dela Cruz", capacity:55,
@@ -439,9 +367,8 @@ new Chart(ctx,{
   }
 });
 /* ---------------- HEATMAP ---------------- */
-/* ---------------- HEATMAP ---------------- */
 
-// All barangays in Sariaya Quezon
+/* ---------------- DATA ---------------- */
 const allBarangays = [
   "Poblacion 1","Poblacion 2","Poblacion 3","Poblacion 4","Poblacion 5","Poblacion 6",
   "Antipolo","Balubal","Bignay 1","Bignay 2","Bucal","Canda","Castañas",
@@ -453,168 +380,83 @@ const allBarangays = [
   "Santo Cristo","Talaan Aplaya","Talaan Pantoc","Tumbaga 1","Tumbaga 2"
 ];
 
-// Generate random example data (1–6 tons)
 function generateExampleData() {
   return Array.from({length:6}, () => +(Math.random()*5 + 1).toFixed(1));
 }
 
 const weeks = [
-  {
-    label: "Jan 26 – Jan 31, 2026",
-    data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() }))
-  },
-  {
-    label: "Feb 2 – Feb 7, 2026",
-    data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() }))
-  },
-  {
-    label: "Feb 9 – Feb 14, 2026",
-    data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() }))
-  }
+  { label: "Jan 26 – Jan 31, 2026", data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() })) },
+  { label: "Feb 2 – Feb 7, 2026", data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() })) },
+  { label: "Feb 9 – Feb 14, 2026", data: allBarangays.map(b => ({ barangay: b, data: generateExampleData() })) }
 ];
-
 
 let currentWeek = 0;
 
-// Heatmap color class
-function getHeatClass(value){
-  if(value === 0 || value === null || value === undefined) return "hm-zero";
-  if(value < 3) return "hm-low";
-  if(value <= 5) return "hm-mid";
-  return "hm-high";
+/* ---------------- GRAPH ---------------- */
+const ctxGraph = document.getElementById('wasteGraph').getContext('2d');
+
+function getChartData(weekIndex){
+  return weeks[weekIndex].data.map(b => b.data.reduce((a,c)=>a+c,0));
 }
 
-// Main table (first 5 barangays alphabetically)
-const body = document.getElementById("heatmapBody");
-const weekLabel = document.getElementById("weekLabel");
-function renderHeatmap(){
-  body.innerHTML = "";
-  weekLabel.value = weeks[currentWeek].label;
+const wasteGraph = new Chart(ctxGraph, {
+  type: 'bar',
+  data: {
+    labels: allBarangays,
+    datasets: [{
+      label: 'Total Waste (tons)',
+      data: getChartData(currentWeek),
+      backgroundColor: '#1e5631'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { maxRotation: 90, minRotation: 45 } },
+      y: { beginAtZero: true, title: { display: true, text: 'Tons Collected' } }
+    }
+  }
+});
 
-  const rows = weeks[currentWeek].data.slice().sort((a,b)=>a.barangay.localeCompare(b.barangay)).slice(0,5);
-  rows.forEach(row => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${row.barangay}</td>` + row.data.map(v => `<td class="${getHeatClass(v)}" title="${v} tons">${v}</td>`).join("");
-    body.appendChild(tr);
-  });
-}
-
-// Week navigation
-document.getElementById("prevWeek").onclick = () => { currentWeek = (currentWeek - 1 + weeks.length) % weeks.length; renderHeatmap(); };
-document.getElementById("nextWeek").onclick = () => { currentWeek = (currentWeek + 1) % weeks.length; renderHeatmap(); };
-
-/* ---------------- VIEW ALL BARANGAYS MODAL ----------------- */
-const viewAllBtn = document.getElementById("viewAllBtn");
-const modalTableBody = document.querySelector("#modalHeatmapTable tbody");
-const allBarangaysModalEl = document.getElementById("allBarangaysModal");
-const allBarangaysModal = new bootstrap.Modal(allBarangaysModalEl);
-
-function renderModalHeatmap() {
-  modalTableBody.innerHTML = "";
-
-  const sortedRows = weeks[currentWeek].data
-    .slice()
-    .sort((a, b) => a.barangay.localeCompare(b.barangay));
-
-  sortedRows.forEach(row => {
-    const tr = document.createElement("tr");
-
-    // Barangay name cell
-    const nameTd = document.createElement("td");
-    nameTd.textContent = row.barangay;
-    tr.appendChild(nameTd);
-
-    // Day cells (WITH COLOR)
-    row.data.forEach(v => {
-      const td = document.createElement("td");
-
-      const value = Number(v) || 0;   // ⭐ VERY IMPORTANT
-      td.textContent = value;
-      td.classList.add(getHeatClass(value));
-      td.title = `${value} tons`;
-
-      tr.appendChild(td);
-    });
-
-    modalTableBody.appendChild(tr);
-  });
-
-  // Update week label (2026 visible)
-  allBarangaysModalEl.querySelector("#modalWeekLabel").value =
-    weeks[currentWeek].label;
-}
-
-// Open modal
-viewAllBtn.onclick = () => { renderModalHeatmap(); allBarangaysModal.show(); };
-// Modal week navigation
-document.getElementById("modalPrevWeek").onclick = () => {
+/* ---------------- WEEK NAVIGATION ---------------- */
+document.getElementById("prevWeek").onclick = () => {
   currentWeek = (currentWeek - 1 + weeks.length) % weeks.length;
-  renderModalHeatmap();  // important para ma-update ang table at week label
+  wasteGraph.data.datasets[0].data = getChartData(currentWeek);
+  wasteGraph.update();
+  document.getElementById("weekLabel").value = weeks[currentWeek].label;
 };
 
-document.getElementById("modalNextWeek").onclick = () => {
+document.getElementById("nextWeek").onclick = () => {
   currentWeek = (currentWeek + 1) % weeks.length;
-  renderModalHeatmap();  // important para ma-update ang table at week label
+  wasteGraph.data.datasets[0].data = getChartData(currentWeek);
+  wasteGraph.update();
+  document.getElementById("weekLabel").value = weeks[currentWeek].label;
 };
 
+/* ---------------- DOWNLOAD PDF ---------------- */
 document.getElementById("downloadHeatmapBtn").onclick = () => {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("l", "mm", "a4"); // landscape para kasya ang days
+  const doc = new jsPDF("l", "mm", "a4");
 
-  const weekLabel = weeks[currentWeek].label;
-
-  // Title
   doc.setFontSize(14);
-  doc.text("Waste Collection Heatmap", 14, 15);
-
+  doc.text("Waste Collection Graph", 14, 15);
   doc.setFontSize(10);
-  doc.text(`Week: ${weekLabel}`, 14, 22);
+  doc.text(`Week: ${weeks[currentWeek].label}`, 14, 22);
 
-  // Table headers
-  const head = [[
-    "Barangay",
-    "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-  ]];
+  const head = [["Barangay","Tons Collected"]];
+  const body = weeks[currentWeek].data.map(b => [
+    b.barangay,
+    b.data.reduce((a,c)=>a+c,0)
+  ]);
 
-  // Table body
-  const body = weeks[currentWeek].data
-    .slice()
-    .sort((a, b) => a.barangay.localeCompare(b.barangay))
-    .map(row => [
-      row.barangay,
-      ...row.data.map(v => v ?? 0)
-    ]);
-
-  // AutoTable
-  doc.autoTable({
-    head,
-    body,
-    startY: 28,
-    styles: {
-      fontSize: 9,
-      halign: "center"
-    },
-    headStyles: {
-      fillColor: [40, 167, 69] // bootstrap green
-    },
-    columnStyles: {
-      0: { halign: "left", cellWidth: 50 } // Barangay column
-    },
-    theme: "grid"
-  });
-
-  // Filename
-  const fileName = `Waste_Heatmap_${weekLabel.replace(/\s|–/g, "_")}.pdf`;
-
+  doc.autoTable({ head, body, startY: 28, styles:{ fontSize:9 }, columnStyles:{0:{cellWidth:60}} });
+  const fileName = `Waste_Graph_${weeks[currentWeek].label.replace(/\s|–/g,"_")}.pdf`;
   doc.save(fileName);
 };
 
-
-// Initial render
-renderHeatmap();
-
 /* ---------------- LOGOUT ---------------- */
-document.getElementById('logoutBtn').addEventListener('click',e=>{
+document.getElementById('logoutBtn').addEventListener('click', e=>{
   e.preventDefault();
   if(confirm("Are you sure you want to log out?")) window.location.href="index.html";
 });

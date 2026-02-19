@@ -58,7 +58,7 @@
       <a class="nav-link" href="collection.html"><i class="bi bi-trash-fill me-2"></i> Collection Records</a>
       <a class="nav-link" href="special.html"><i class="bi bi-exclamation-circle-fill me-2"></i> Special Pickup</a>
       <a class="nav-link" href="resident.html"><i class="bi bi-file-earmark-text-fill me-2"></i> Resident Reports</a>
-      <a class="nav-link active" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Analytics & Reports</a>
+      <a class="nav-link active" href="analytics.html"><i class="bi bi-bar-chart-fill me-2"></i> Visual Analytics & Reports</a>
       <a class="nav-link" href="announcements.html"><i class="bi bi-megaphone-fill me-2"></i> Announcements</a>
       <a class="nav-link" href="news.html"><i class="bi bi-newspaper me-2"></i> News & Articles</a>
       <a class="nav-link" href="user.html"><i class="bi bi-people-fill me-2"></i> User Management</a>
@@ -71,7 +71,7 @@
     <div class="container-fluid">
 
       <div class="card p-4 mb-4">
-        <h4 class="fw-semibold text-dark mb-3"><i class="bi bi-bar-chart-fill me-2 text-success"></i>Analytics & Reports</h4>
+        <h4 class="fw-semibold text-dark mb-3"><i class="bi bi-bar-chart-fill me-2 text-success"></i>Visual Analytics & Reports</h4>
 
         <div class="row g-4">
 
@@ -80,9 +80,11 @@
           <div class="col-lg-6">
             <div class="chart-card">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-semibold mb-2 text-secondary">Waste Collected per Barangay
-                  <i class="bi bi-info-circle text-secondary ms-2" data-bs-toggle="tooltip" title="Shows the total waste collected per barangay for selected date."></i>
-                </h6>
+              <h6 class="fw-semibold mb-2 text-secondary">Waste Collected per Barangay
+  <i class="bi bi-info-circle text-secondary ms-2" 
+     data-bs-toggle="tooltip" 
+     title="Shows the total waste collected in each barangay on a specific date. This helps identify areas that generate more waste and may require more resources or adjusted collection schedules."></i>
+</h6>
                 <div class="d-flex gap-2">
                   <input type="date" id="barChartDate" class="form-control form-control-sm" style="width:160px;">
                   <button class="btn btn-sm btn-outline-success" id="viewAllBarangaysBtn"></i> View All</button>
@@ -96,9 +98,11 @@
           <div class="col-lg-6">
             <div class="chart-card">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-semibold mb-2 text-secondary">Weekly Collection Trends
-                  <i class="bi bi-info-circle text-secondary ms-2" data-bs-toggle="tooltip" title="Trends of collected waste over a 6-day week (Mon-Sat)."></i>
-                </h6>
+              <h6 class="fw-semibold mb-2 text-secondary">Weekly Collection Trends
+  <i class="bi bi-info-circle text-secondary ms-2" 
+     data-bs-toggle="tooltip" 
+     title="Displays the total amount of garbage collected from the entire municipality each day, Monday through Saturday. This helps administrators identify collection patterns, detect days with unusually high or low volumes, and adjust staffing, truck assignments, or schedules to ensure efficient waste collection across all barangays."></i>
+</h6>
                 <div class="input-group input-group-sm" style="width:200px;">
                   <button class="btn btn-outline-secondary" id="prevWeek">&lt;</button>
                   <input type="text" id="weekRange" class="form-control text-center" readonly>
@@ -113,23 +117,15 @@
           <div class="col-lg-6">
             <div class="chart-card" style="height:320px;">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-semibold mb-2 text-secondary">Report Resolution Rate (%)
-                  <i class="bi bi-info-circle text-secondary ms-2" data-bs-toggle="tooltip" title="Percentage of reported issues resolved within selected month."></i>
-                </h6>
+              <h6 class="fw-semibold mb-2 text-secondary">Report Resolution Rate (%)
+  <i class="bi bi-info-circle text-secondary ms-2" 
+     data-bs-toggle="tooltip" 
+     title="Shows the monthly percentage of resident complaints addressed by MENRO. This allows administrators to monitor service effectiveness, prioritize problem areas, and improve responsiveness."></i>
+              </h6>
                 <select id="resolutionMonth" class="form-select form-select-sm" style="width:120px;">
                   <option value="Jan">January</option>
                   <option value="Feb">February</option>
                   <option value="Mar">March</option>
-                    <option value="Mar">April</option>
-                    <option value="Mar">May</option>
-                    <option value="Mar">June</option>
-                    <option value="Mar">July</option>
-                    <option value="Mar">August</option>
-                    <option value="Mar">September</option>
-                    <option value="Mar">October</option>
-                    <option value="Mar">November</option>
-                    <option value="Mar">December</option>
-                  
                 </select>
               </div>
               <canvas id="pieChart" style="display:block;margin:0 auto;height:230px;"></canvas>
@@ -141,8 +137,10 @@
             <div class="chart-card">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="fw-semibold mb-2 text-secondary">Route Efficiency / Duration
-                  <i class="bi bi-info-circle text-secondary ms-2" data-bs-toggle="tooltip" title="Planned vs actual duration per route."></i>
-                </h6>
+  <i class="bi bi-info-circle text-secondary ms-2" 
+     data-bs-toggle="tooltip" 
+     title="Compares the planned versus actual time each truck takes per route. This highlights inefficiencies, such as delays caused by traffic, road obstacles, or insufficient resources, allowing administrators to optimize routes or redistribute workload."></i>
+</h6>
                 <input type="date" id="routeDate" class="form-control form-control-sm" style="width:160px;">
               </div>
               <canvas id="routeChart"></canvas>
@@ -468,5 +466,4 @@ function downloadPDF() {
 
   </script>
 </body>
-
 </html>
